@@ -450,3 +450,94 @@ $ art -c third.fcl -o myfile.art
 $
 ```
 
+
+`fourth.fcl`
+------------
+
+Now we have an output Art file, we can use it as an event source. All we need
+to do is change the `source` table to use the `RootInput` module which can read
+from Art-format ROOT files:
+
+```
+source : {
+  module_type : RootInput
+  fileNames   : ["third.art"]
+}
+
+physics : {
+  op: [ myOutput ]
+}
+
+outputs : {
+  myOutput : {
+    module_type : RootOutput
+    fileName    : "fourth.art"
+  }
+}
+```
+
+Assuming that `third.art` exists in the current directory, then this can be
+run as:
+
+```console
+$ art -c fourth.fcl
+Expected environment variable FHICL_FILE_PATH is missing or empty: using "."
+INFO: using default process_name of "DUMMY".
+%MSG-i MF_INIT_OK:  Early 18-Mar-2018 18:51:42 GMT JobSetup
+Messagelogger initialization complete.
+%MSG
+18-Mar-2018 18:51:44 GMT  Initiating request to open input file "third.art"
+18-Mar-2018 18:51:44 GMT  Opened input file "third.art"
+%MSG-i FastCloning:  RootOutput:myOutput@Construction 18-Mar-2018 18:51:45 GMT  ModuleConstruction
+Initial fast cloning configuration (from default): true
+%MSG
+Begin processing the 1st record. run: 1 subRun: 0 event: 1 at 18-Mar-2018 18:51:45 GMT
+18-Mar-2018 18:51:45 GMT  Opened output file with pattern "fourth.art"
+Begin processing the 2nd record. run: 1 subRun: 0 event: 2 at 18-Mar-2018 18:51:45 GMT
+Begin processing the 3rd record. run: 1 subRun: 0 event: 3 at 18-Mar-2018 18:51:45 GMT
+Begin processing the 4th record. run: 1 subRun: 0 event: 4 at 18-Mar-2018 18:51:45 GMT
+Begin processing the 5th record. run: 1 subRun: 0 event: 5 at 18-Mar-2018 18:51:45 GMT
+Begin processing the 6th record. run: 1 subRun: 0 event: 6 at 18-Mar-2018 18:51:45 GMT
+Begin processing the 7th record. run: 1 subRun: 0 event: 7 at 18-Mar-2018 18:51:45 GMT
+Begin processing the 8th record. run: 1 subRun: 0 event: 8 at 18-Mar-2018 18:51:45 GMT
+Begin processing the 9th record. run: 1 subRun: 0 event: 9 at 18-Mar-2018 18:51:45 GMT
+Begin processing the 10th record. run: 1 subRun: 0 event: 10 at 18-Mar-2018 18:51:45 GMT
+18-Mar-2018 18:51:45 GMT  Closed output file "fourth.art"
+18-Mar-2018 18:51:45 GMT  Closed input file "third.art"
+
+TrigReport ---------- Event  Summary ------------
+TrigReport Events total = 10 passed = 10 failed = 0
+
+TrigReport ------ Modules in End-Path: end_path ------------
+TrigReport  Trig Bit#        Run    Success      Error Name
+TrigReport     0    0         10         10          0 myOutput
+
+TimeReport ---------- Time  Summary ---[sec]----
+TimeReport CPU = 0.134975 Real = 0.146336
+
+Art has completed and will exit with status 0.
+$
+```
+
+Filenames in the input and output modules can be specified as relative or full paths.
+With a file based input module, we can also run the script using command line
+specified input and output files, e.g
+
+```console
+$ art -s myinput.art -c fourth.fcl -o myoutput.art
+...
+```
+
+As before, run `art --print-description RootInput` to find out what parameters
+the module can take.
+
+
+Going Further
+=============
+
+The above sections show the basic functionality of `art` and control of input, output
+and event processing. To go further we need to define our experiment's data model so
+that we can store this in events for processing.
+
+
+
