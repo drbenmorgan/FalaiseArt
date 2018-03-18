@@ -16,3 +16,9 @@ Getting Started
 
 See [example_scripts](examples_scripts/README.md]) for a basic sanity check of the art installation
 and working with FHiCL scripts for event/IO control.
+
+Further Information
+===================
+- [FHiCL Syntax and Semantics](https://cdcvs.fnal.gov/redmine/documents/327)
+- [Art Framework Parameters](https://cdcvs.fnal.gov/redmine/projects/art/wiki/ART_framework_parameters)
+- [Overall Art Guide](https://cdcvs.fnal.gov/redmine/projects/art/wiki)
