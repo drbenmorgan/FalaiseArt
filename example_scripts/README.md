@@ -309,3 +309,144 @@ $
 ```
 
 Try out some of the other parameters for `EmptyEvent` and see what happens
+
+
+`third.fcl`
+-----------
+
+So far our empty events are not processed and no results are output to file.
+As with the number of events, output to file can be controlled by a command
+line argument or FHiCL parameter. In the former case, we can use the `-o` command
+line argument to `art` which defaults output to ROOT format via the `RootOutput`
+module. Though art output files are ROOT format, convention is to use the `.art`
+extension to distinguish them from possible analysis level files (of which more later).
+
+Using our previous `second.fcl` file, we can output the events to file via:
+
+```console
+$ art -c second.fcl -o second.art
+Expected environment variable FHICL_FILE_PATH is missing or empty: using "."
+INFO: using default process_name of "DUMMY".
+%MSG-i MF_INIT_OK:  Early 18-Mar-2018 17:19:27 GMT JobSetup
+Messagelogger initialization complete.
+%MSG
+%MSG-i FastCloning:  RootOutput:out@Construction 18-Mar-2018 17:19:29 GMT  ModuleConstruction
+Initial fast cloning configuration (from default): true
+%MSG
+Begin processing the 1st record. run: 1 subRun: 0 event: 1 at 18-Mar-2018 17:19:29 GMT
+18-Mar-2018 17:19:29 GMT  Opened output file with pattern "second.art"
+%MSG-w FastCloning:  PostProcessEvent 18-Mar-2018 17:19:29 GMT  run: 1 subRun: 0 event: 1
+Fast cloning deactivated for this input file due to empty event tree and/or event limits.
+%MSG
+Begin processing the 2nd record. run: 1 subRun: 0 event: 2 at 18-Mar-2018 17:19:29 GMT
+Begin processing the 3rd record. run: 1 subRun: 0 event: 3 at 18-Mar-2018 17:19:29 GMT
+Begin processing the 4th record. run: 1 subRun: 0 event: 4 at 18-Mar-2018 17:19:29 GMT
+Begin processing the 5th record. run: 1 subRun: 0 event: 5 at 18-Mar-2018 17:19:29 GMT
+Begin processing the 6th record. run: 1 subRun: 0 event: 6 at 18-Mar-2018 17:19:29 GMT
+Begin processing the 7th record. run: 1 subRun: 0 event: 7 at 18-Mar-2018 17:19:29 GMT
+Begin processing the 8th record. run: 1 subRun: 0 event: 8 at 18-Mar-2018 17:19:29 GMT
+Begin processing the 9th record. run: 1 subRun: 0 event: 9 at 18-Mar-2018 17:19:29 GMT
+Begin processing the 10th record. run: 1 subRun: 0 event: 10 at 18-Mar-2018 17:19:29 GMT
+18-Mar-2018 17:19:30 GMT  Closed output file "second.art"
+
+TrigReport ---------- Event  Summary ------------
+TrigReport Events total = 10 passed = 10 failed = 0
+
+TrigReport ------ Modules in End-Path: end_path ------------
+TrigReport  Trig Bit#        Run    Success      Error Name
+TrigReport     0    0         10         10          0 out
+
+TimeReport ---------- Time  Summary ---[sec]----
+TimeReport CPU = 1.027326 Real = 1.035404
+
+Art has completed and will exit with status 0.
+$
+$ file second.art
+second.art: ROOT file Version 61204 (Compression: 7)
+$
+```
+
+We can also define the filename in the FHiCL file using the
+`outputs` table (note the plural, unlike `source` we can have
+multiple outputs eventually). However, because outputs are part
+of processing, we must also add the `physics` table so we
+can put the output in this:
+
+```
+source : {
+  module_type : EmptyEvent
+  maxEvents   : 10
+  firstRun    :  1
+}
+
+physics : {
+  op: [ myOutput ]
+}
+
+outputs : {
+  myOutput : {
+    module_type : RootOutput
+    fileName    : "third.art"
+  }
+}
+```
+
+In `physics:` we add the `op` list to define modules to be processed.
+The `op` name is arbitrary and can be anything you like, as Art's syntax
+can separate these lists from other settings. The list contains names of
+modules to be processed, here, the `myOutput` module we defined later in
+the `outputs` table. This seemingly odd way of defining things will help
+later on when we define more complex processing paths and multiple outputs.
+The script can be run like the others:
+
+```console
+$ art -c third.fcl
+Expected environment variable FHICL_FILE_PATH is missing or empty: using "."
+INFO: using default process_name of "DUMMY".
+%MSG-i MF_INIT_OK:  Early 18-Mar-2018 17:47:56 GMT JobSetup
+Messagelogger initialization complete.
+%MSG
+%MSG-i FastCloning:  RootOutput:myOutput@Construction 18-Mar-2018 17:47:57 GMT  ModuleConstruction
+Initial fast cloning configuration (from default): true
+%MSG
+Begin processing the 1st record. run: 1 subRun: 0 event: 1 at 18-Mar-2018 17:47:57 GMT
+18-Mar-2018 17:47:57 GMT  Opened output file with pattern "third.art"
+%MSG-w FastCloning:  PostProcessEvent 18-Mar-2018 17:47:57 GMT  run: 1 subRun: 0 event: 1
+Fast cloning deactivated for this input file due to empty event tree and/or event limits.
+%MSG
+Begin processing the 2nd record. run: 1 subRun: 0 event: 2 at 18-Mar-2018 17:47:57 GMT
+Begin processing the 3rd record. run: 1 subRun: 0 event: 3 at 18-Mar-2018 17:47:57 GMT
+Begin processing the 4th record. run: 1 subRun: 0 event: 4 at 18-Mar-2018 17:47:57 GMT
+Begin processing the 5th record. run: 1 subRun: 0 event: 5 at 18-Mar-2018 17:47:57 GMT
+Begin processing the 6th record. run: 1 subRun: 0 event: 6 at 18-Mar-2018 17:47:57 GMT
+Begin processing the 7th record. run: 1 subRun: 0 event: 7 at 18-Mar-2018 17:47:57 GMT
+Begin processing the 8th record. run: 1 subRun: 0 event: 8 at 18-Mar-2018 17:47:57 GMT
+Begin processing the 9th record. run: 1 subRun: 0 event: 9 at 18-Mar-2018 17:47:57 GMT
+Begin processing the 10th record. run: 1 subRun: 0 event: 10 at 18-Mar-2018 17:47:57 GMT
+18-Mar-2018 17:47:58 GMT  Closed output file "third.art"
+
+TrigReport ---------- Event  Summary ------------
+TrigReport Events total = 10 passed = 10 failed = 0
+
+TrigReport ------ Modules in End-Path: end_path ------------
+TrigReport  Trig Bit#        Run    Success      Error Name
+TrigReport     0    0         10         10          0 myOutput
+
+TimeReport ---------- Time  Summary ---[sec]----
+TimeReport CPU = 1.037451 Real = 1.045176
+
+Art has completed and will exit with status 0.
+$
+$ file third.fcl
+third.art: ROOT file Version 61204 (Compression: 7)
+```
+
+Even with the output file name on the fcl file, we can override it from
+the command line with the `-o` argument:
+
+``` console
+$ art -c third.fcl -o myfile.art
+...
+$
+```
+
