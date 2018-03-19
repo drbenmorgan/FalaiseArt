@@ -8,14 +8,34 @@ the [art](https://art.fnal.gov) framework for data management and processing.
 Installing Art
 ==============
 
-1. From Homebrew via the [art-suite tap](https://github.com/drbenmorgan/homebrew-art_suite)
+1. Use Linux/Homebrew with the [art-suite tap](https://github.com/drbenmorgan/homebrew-art_suite)
+2. Use Docker with the [art image](https://hub.docker.com/r/benmorgan/art/)
+   ```
+   $ docker run --rm -it benmorgan/art
+   ```
 2. From CVMFS (**TODO**)
 
 Getting Started
 ===============
-
-See [example_scripts](examples_scripts/README.md]) for a basic sanity check of the art installation
+Basic Art Usage
+---------------
+See [example_scripts](examples_scripts/README.md]) for a basic sanity check of your art installation
 and working with FHiCL scripts for event/IO control.
+
+
+Building the Falaise-Art Plugins
+--------------------------------
+
+Assuming you have Art installed as described above, Falaise-Art
+follows a standard CMake-based build:
+
+```console
+... Assuming we start in the directory holding this README ...
+$ mkdir build
+$ cd build
+$ cmake -DCMAKE_PREFIX_PATH=$(brew --prefix sqlite) ..
+$ make && make test
+```
 
 Further Information
 ===================
