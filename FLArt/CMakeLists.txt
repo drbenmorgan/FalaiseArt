@@ -1,2 +1,3 @@
 # - Separate dirs for data products, algorithms, services etc
 # ...
+add_subdirectory(RawDataProducts)
