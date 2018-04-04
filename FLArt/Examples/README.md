@@ -26,9 +26,10 @@ which the following sections will refer to.
 --------------------------------
 
 Example of an input source of events, e.g. from a file, stream
-or event generator. Art can read its own files, but if we want to
-read from a custom file format we must provide an implementation for this.
+or event generator. In Falaise/Bayeux, the equivalent is `dpp::input_module`.
 
+Art can read its own files, but if we want to
+read from a custom file format we must provide an implementation for this.
 This file shows a minimal implementation of the interface described here:
 
 - https://cdcvs.fnal.gov/redmine/projects/art/wiki/Writing_your_own_input_sources
@@ -45,7 +46,10 @@ of the `EmptyEvent` input source followed by a `EDProducer` module (See
 -----------------------------
 
 Example of a concrete class of `art::EDProducer`, a module that can read from
-and write to an `art::Event`. It shows that minimal interface such a module has,
+and write to an `art::Event`. In Falaise/Bayeux, the equivalent is a concrete
+class of `dpp::base_module`.
+
+It shows that minimal interface such a module has,
 with configuration at construction time via a bare `fhicl::ParameterSet` object,
 and it "produces" (i.e. writes to the event) a single integer.
 
@@ -73,12 +77,18 @@ The primary benefits of this are
 See also the art Wiki entries on [recommended use and enabling config validation in modules](https://cdcvs.fnal.gov/redmine/projects/art/wiki/Configuration_validation_and_description) and
 the dedicated FHiCL wiki on [configuration validation](https://cdcvs.fnal.gov/redmine/projects/fhicl-cpp/wiki/Configuration_validation_and_fhiclcpp_types)
 
+In Falaise/Bayeux, the closest equivalent is Bayeux's OCD functionality, but this only
+covers documentation, not validation. It is also completely separate to the processing/validation
+of the input config, which the user must handle by hand, and keep in sync with the OCD info.
 
 `FLExampleAnalyzer_module.cc`
 -----------------------------
 
 Example of a concrete class of `art::EDAnalyser`, a module that can
-only read data from `art::Event` instances. It demonstrates a
+only read data from `art::Event` instances. In Falaise/Bayeux, the closest equivalent is a concrete
+class of `dpp::base_module`, but this can always read and write.
+
+It demonstrates a
 typical use case for such a module: reading data from each event and
 filling a histogram. To enable this it uses art's `TFileService`, a
 builtin ["service"](https://cdcvs.fnal.gov/redmine/projects/art/wiki/Guide_to_writing_and_using_services)
