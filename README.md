@@ -13,7 +13,13 @@ Installing Art
    ```
    $ docker run --rm -it benmorgan/art
    ```
-2. From CVMFS (**TODO**)
+2. From OpenScienceGrid CVMFS
+   ```
+   $ source /cvmfs/fermilab.opensciencegrid.org/products/larsoft/setups
+   $ setup art v2_10_03 -q e15:prof
+   ```
+   Note that at present this cannot be used to build the example plugins, but the
+   [example scripts](example_scripts) can be run.
 
 Getting Started
 ===============
