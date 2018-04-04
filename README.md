@@ -19,7 +19,7 @@ Getting Started
 ===============
 Basic Art Usage
 ---------------
-See [example_scripts](examples_scripts/README.md) for a basic sanity check of your art installation
+See [example_scripts](example_scripts) for a basic sanity check of your art installation
 and working with FHiCL scripts for event/IO control.
 
 
