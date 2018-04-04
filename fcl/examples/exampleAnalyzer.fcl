@@ -1,0 +1,62 @@
+services: {
+  message: {
+    destinations: {
+      Console: {
+        type: cout
+        threshold: DEBUG
+      }
+    }
+  }
+
+  // For analyzer module, must have
+  // TFileService, but art will warn us if
+  // a module uses it but hasn't been set up.
+  TFileService: {}
+}
+
+source: {
+  module_type: FLExampleInputSource
+  // We use two filenames just to show how Runs/Subruns/Events
+  // roll over. 
+  fileNames: ["foo.brio", "bar.brio"]
+}
+
+physics: {
+  producers: {
+    ALabel: {
+      module_type: FLExampleProducer
+      value: 1
+    }
+
+    BLabel: {
+      module_type: FLExampleConfigurableProducer
+      message: "Hello from BLabel"
+      value: 2
+    }
+  }
+
+  analyzers: {
+    myAnalyzer: {
+      module_type: FLExampleAnalyzer
+    }
+  }
+
+
+  myPath: [ ALabel, BLabel]
+  analysisPath: [ myAnalyzer ]
+  outPath: [ dumpOut ]
+}
+
+outputs: {
+  dumpOut: {
+    module_type: FileDumperOutput
+  }
+}
+
+
+// Think of the above as defaults, we can now
+// add or override (note that we always fully dot-qualify things)
+
+services.message.debugModules: [ myAnalyzer ]
+physics.end_paths: [ analysisPath ]
+services.TFileService.fileName: "exampleAnalyzer.root"

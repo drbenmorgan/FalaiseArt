@@ -1,0 +1,34 @@
+services: {
+  message: {
+    debugModules: ["BLabel"]
+
+    destinations: {
+      Console: {
+        type: cout
+        threshold: DEBUG
+      }
+    }
+  }
+}
+
+source: {
+  module_type: FLExampleInputSource
+  fileNames: ["foo.brio", "bar.brio"]
+}
+
+physics: {
+  producers: {
+    ALabel: {
+      module_type: FLExampleProducer
+      value: 1
+    }
+
+    BLabel: {
+      module_type: FLExampleProducer
+      message: "Hello from BLabel"
+      value: 2
+    }
+  }
+
+  myPath: [ ALabel, BLabel]
+}

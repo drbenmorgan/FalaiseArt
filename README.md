@@ -37,6 +37,11 @@ $ cmake -DCMAKE_PREFIX_PATH=$(brew --prefix sqlite) ..
 $ make && make test
 ```
 
+Using Falaise-Art Plugins
+-------------------------
+See the [example Modules](FLArt/Examples) and the associated
+[FHiCL scripts](fcl/examples).
+
 Further Information
 ===================
 - [FHiCL Syntax and Semantics](https://cdcvs.fnal.gov/redmine/documents/327)
