@@ -17,6 +17,9 @@ find_package(art 2.10 REQUIRED)
 find_package(canvas_root_io REQUIRED)
 find_package(ROOT 6 REQUIRED)
 
+# Bayeux (may need Falaise later) for bridging
+find_package(Bayeux 3.1 REQUIRED)
+
 # macros for art_dictionary and simple_plugin
 include(ArtDictionary)
 include(BuildPlugins)
@@ -25,4 +28,4 @@ include(BuildPlugins)
 # Build what we need
 #
 add_subdirectory(FLArt)
-
+add_subdirectory(programs)
