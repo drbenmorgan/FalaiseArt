@@ -12,12 +12,12 @@ is split into two parts:
 Main File Format
 ================
 
-Brio files are just plain ROOT v6 format files
+Brio files are just plain [ROOT](https://root.cern.ch) v6 format files
 
 Layout of File Contents
 =======================
 
-Brio files hold 0-N ROOT `TTree`s (called "stores" in Brio). Each TTree has
+Brio files hold 0-N ROOT `TTree`(s (called "stores" in Brio). Each TTree has
 one TBranch, storing one `brio_record` per entry. The `brio_record` structure
 is organised as:
 
@@ -86,10 +86,10 @@ a way to add arbitrary data to an object (as long as it's `int`, `double`
 `bool` `string` or collections of those). Going forward we want to remove
 these as
 
-i) They are generally not used(!)
-ii) The arbitrary nature of their interface is not suitable for a data model.
-Rather, this "post-it" note functionality should be modelled by associations,
-if required.
+- They are generally not used(!)
+- The arbitrary nature of their interface is not suitable for a data model.
+  Rather, this "post-it" note functionality should be modelled by associations,
+  if required.
 
 Some review will be needed to track down where/when "auxilliaries" are
 filled/used to provide an interface in code.
