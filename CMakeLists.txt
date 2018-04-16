@@ -18,7 +18,7 @@ find_package(canvas_root_io REQUIRED)
 find_package(ROOT 6 REQUIRED)
 
 # Bayeux (may need Falaise later) for bridging
-find_package(Bayeux 3.1 REQUIRED)
+find_package(Bayeux 3.0 REQUIRED)
 
 # macros for art_dictionary and simple_plugin
 include(ArtDictionary)
