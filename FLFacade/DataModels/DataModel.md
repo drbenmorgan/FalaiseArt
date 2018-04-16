@@ -120,9 +120,10 @@ This class models a picosecond precision timestamp
 ```c++
 class snemo::datamodel::timestamp
 {
-  int64_t     _seconds_; //!< Number of seconds
-  int64_t _picoseconds_; //!< Number of picoseconds
+  int64_t     _seconds_; ///< Number of seconds
+  int64_t _picoseconds_; ///< Number of picoseconds
 };
+```
 
 
 `mctools::simulated_data` Class
@@ -141,8 +142,8 @@ Models a run+event number
 
 ```c++
 class datatools::event_id {
-  int32_t run_number_;   //!< Run number
-  int32_t event_number_; //!< Event number in run
+  int32_t run_number_;   ///< Run number
+  int32_t event_number_; ///< Event number in run
 };
 ```
 
@@ -153,9 +154,9 @@ General base class for hits
 ```c++
 class geomtools::base_hit
 {
-  int32_t                    _hit_id_; //!< Unique hit ID
-  geomtools::geom_id        _geom_id_; //!< Geometry ID
-  datatools::properties _auxiliaries_; //!< Auxiliary properties (want to ignore, if possible)
+  int32_t                    _hit_id_; ///< Unique hit ID
+  geomtools::geom_id        _geom_id_; ///< Geometry ID
+  datatools::properties _auxiliaries_; ///< Auxiliary properties (want to ignore, if possible)
 };
 ```
 
