@@ -28,4 +28,4 @@ include(BuildPlugins)
 # Build what we need
 #
 add_subdirectory(FLArt)
-add_subdirectory(programs)
+add_subdirectory(FLFacade)
