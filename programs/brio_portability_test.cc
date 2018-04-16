@@ -38,7 +38,11 @@ void write(const std::string& path) {
   std::clog << "Writing file `" << path << "`\n";
 
   // Open (Brio) file
+#ifdef BRIO_TEXT_FORMAT
+  brio::writer output{path, "text"};
+#else
   brio::writer output{path};
+#endif
 
   // Add "GI" bank, add datatools::properties entries
   output.add_store("GI", datatools::properties::SERIAL_TAG);
@@ -75,7 +79,11 @@ void read(const std::string& path) {
   std::clog << "Reading file `" << path << "`\n";
 
   // Open (brio) file
+#ifdef BRIO_TEXT_FORMAT
+  brio::reader input{path, "text"};
+#else
   brio::reader input{path};
+#endif
 
   std::clog << "checking format... ";
   // Assert existence of "GI" and "ER" banks
