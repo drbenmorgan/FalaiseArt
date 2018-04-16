@@ -14,8 +14,6 @@ int main(int argc, char *argv[]) {
   }
 
   std::string brioFile {argv[1]};
-  std::cout << brioFile << "\n";
-
   brio::reader input;
 
   // File open will throw an exception if file doesn't exist
@@ -33,7 +31,8 @@ int main(int argc, char *argv[]) {
   // a valid TFile pointer, but nothing else.
   // What is typical behaviour for programs that open a file
   // of invalid format?
-  input.tree_dump();
+  std::clog << "+- File Metadata\n";
+  input.tree_dump(std::clog, "", "   ");
 
   // In a Falaise3 file, have two stores:
   // - "ER" of datatools::things objects (Event store)
@@ -55,10 +54,11 @@ int main(int argc, char *argv[]) {
   // NB: the currently active one!
   // Note that the loadXXX operations are relatively inefficient
   // as they do a large number of checks at each stage.
+  std::clog << "+- GI Store:\n";
   while (input.has_next()) {
     input.load_next(giObject);
-    std::cout << "+- Item " << i << "\n";
-    giObject.tree_dump();
+    std::clog << "   +- Entry: " << i << "\n";
+    giObject.tree_dump(std::clog, "", "      ");
     ++i;
   }
 
@@ -71,27 +71,30 @@ int main(int argc, char *argv[]) {
 
   while(input.has_next()) {
     input.load_next(event);
-    std::cout << "+- Event " << i << "\n";
-    // Important to check that "handles" are unique (handle.unique()), and are
-    // valid (handle.has_data)
-    // Yep, can extract the basic object...
-    //
-
-    // What about subobjects?
-    // the SD bank...
+    std::clog << "+- Event " << i << "\n";
+    // Iterate over the SD bank...
     auto& data = event.get<mctools::simulated_data>("SD");
+
     // Loop over each HC, dump hits in each
     auto& HMap = data.get_step_hits_dict();
     for(const auto& elem : HMap) {
       std::clog << "   +- " << elem.first << std::endl;
       for(const auto& hit : elem.second) {
+        // Important to check that "handles" are unique (handle.unique()), and are
+        // valid (handle.has_data) (the latter *should* always be true)
+        if(!hit.has_data()) {
+          throw std::runtime_error("hit has no data...");
+        }
+        if(!hit.unique()) {
+          throw std::runtime_error("hit is not unique");
+        }
+
         std::clog << "      +- " << elem.first << "_hit\n";
-        // Note the craziness of handles...
+        // Note the craziness of datatools::handles...
         // Should just be hit->tree_dump(...) !!!
         hit.get().tree_dump(std::clog, "", "         ");
       }
     }
-
     ++i;
   }
 
