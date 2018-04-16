@@ -72,15 +72,25 @@ int main(int argc, char *argv[]) {
   while(input.has_next()) {
     input.load_next(event);
     std::cout << "+- Event " << i << "\n";
-    event.tree_dump();
     // Important to check that "handles" are unique (handle.unique()), and are
     // valid (handle.has_data)
     // Yep, can extract the basic object...
-    // const mctools::simulated_data& data = event.get<mctools::simulated_data>("SD");
-    // data.tree_dump();
     //
 
-    // What about subobjects
+    // What about subobjects?
+    // the SD bank...
+    auto& data = event.get<mctools::simulated_data>("SD");
+    // Loop over each HC, dump hits in each
+    auto& HMap = data.get_step_hits_dict();
+    for(const auto& elem : HMap) {
+      std::clog << "   +- " << elem.first << std::endl;
+      for(const auto& hit : elem.second) {
+        std::clog << "      +- " << elem.first << "_hit\n";
+        // Note the craziness of handles...
+        // Should just be hit->tree_dump(...) !!!
+        hit.get().tree_dump(std::clog, "", "         ");
+      }
+    }
 
     ++i;
   }
