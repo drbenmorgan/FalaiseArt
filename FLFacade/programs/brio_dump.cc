@@ -73,10 +73,14 @@ int main(int argc, char *argv[]) {
     input.load_next(event);
     std::cout << "+- Event " << i << "\n";
     event.tree_dump();
-
+    // Important to check that "handles" are unique (handle.unique()), and are
+    // valid (handle.has_data)
     // Yep, can extract the basic object...
-    const mctools::simulated_data& data = event.get<mctools::simulated_data>("SD");
-    data.tree_dump();
+    // const mctools::simulated_data& data = event.get<mctools::simulated_data>("SD");
+    // data.tree_dump();
+    //
+
+    // What about subobjects
 
     ++i;
   }
