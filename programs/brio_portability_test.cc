@@ -49,12 +49,24 @@ void write(const std::string& path) {
   // store 10 empty events
   for (size_t i{0}; i < 10; ++i) {
     datatools::things event;
-    auto mcd = event.add<mctools::simulated_data>("SD");
+    auto& mcd = event.add<mctools::simulated_data>("SD");
     mcd.set_time(3.14);
+    // 'gg' hits
+    mcd.add_step_hits("gg",10);
+    for (size_t g{0}; g < 10; ++g) {
+      auto& h = mcd.add_step_hit("gg");
+      h.reset();
+    }
+    // 'calo' hits
+    mcd.add_step_hits("calo",10);
+    for (size_t c{0}; c < 10; ++c) {
+      auto& h = mcd.add_step_hit("calo");
+      h.reset();
+    }
+
     output.store(event, "ER");
   }
 
-  // Just empty ones to begin with
   // See how to do same in XML file.
 
 }
@@ -128,7 +140,6 @@ void read(const std::string& path) {
       ++i;
     }
   }
-
 }
 
 
