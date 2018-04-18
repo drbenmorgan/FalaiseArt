@@ -62,6 +62,7 @@ snemo::BrioInputSourceDriver::BrioInputSourceDriver(
   // Products this source will reconstitute into Principals
   // string is the module label.
   helper.reconstitutes<int, art::InEvent>("BrioInputSource");
+  helper.reconstitutes<datatools::properties, art::InEvent>("BrioInputSource");
 }
 
 
@@ -100,7 +101,6 @@ snemo::BrioInputSourceDriver::readNext(
   // checking for boundaries, don't expect them in Brio files)
   if (inR == nullptr) {
     outR = srcHelper_.makeRunPrincipal(1, art::Timestamp{});
-    // bInput_.load(GI_STORE)...
   }
   // Same for input SubRunPrincipal
   if (inSR == nullptr) {
@@ -120,6 +120,12 @@ snemo::BrioInputSourceDriver::readNext(
                                        eID,
                                        art::Timestamp{});
   art::put_product_in_principal(std::make_unique<int>(eID), *outE, "BrioInputSource");
+
+  datatools::properties p;
+  bInput_.load(p, GI_STORE, 0);
+  art::put_product_in_principal(std::make_unique<datatools::properties>(p), *outE, "BrioInputSource");
+
+
 
   return true;
 }
