@@ -16,3 +16,6 @@ target_link_libraries(FLFacade_DataModels
     Bayeux::Bayeux
   )
 
+# 2. The art dictionary
+#    Must link it with the interface layer
+art_dictionary(DICTIONARY_LIBRARIES FLFacade_DataModels)
