@@ -3,4 +3,4 @@
 # - Pure examples
 add_subdirectory(Examples)
 
-#add_subdirectory(RawDataProducts)
+add_subdirectory(RawDataProducts)

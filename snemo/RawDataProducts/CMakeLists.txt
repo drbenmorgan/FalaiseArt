@@ -4,9 +4,9 @@
 
 # 1. Here's the C++ interface layer, just an INTERFACE
 #    library because we have "dumb" structs
-add_library(FLArt_RawDataProducts INTERFACE)
-target_include_directories(FLArt_RawDataProducts INTERFACE ${PROJECT_SOURCE_DIR})
+add_library(snemo_RawDataProducts INTERFACE)
+target_include_directories(snemo_RawDataProducts INTERFACE ${PROJECT_SOURCE_DIR})
 
 # 2. The art dictionary
 #    Must link it with the interface layer
-art_dictionary(DICTIONARY_LIBRARIES FLArt_RawDataProducts)
+art_dictionary(DICTIONARY_LIBRARIES snemo_RawDataProducts)

@@ -27,5 +27,5 @@ include(BuildPlugins)
 #-----------------------------------------------------------------------
 # Build what we need
 #
-add_subdirectory(FLArt)
+add_subdirectory(snemo)
 add_subdirectory(FLFacade)
