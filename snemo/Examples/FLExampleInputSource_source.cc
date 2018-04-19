@@ -37,17 +37,15 @@ public:
   void closeCurrentFile();
 
 private:
-  art::SourceHelper const&
-    srcHelper_;             //< {Run,SubRun,Event}Principal construction helper
-  std::string currentFile_; //< Name of file currently being read
-  size_t currentEvent_;     //< event counter
+  art::SourceHelper const& srcHelper_; //< {Run,SubRun,Event}Principal construction helper
+  std::string currentFile_;            //< Name of file currently being read
+  size_t currentEvent_;                //< event counter
 };
 
 // Implementation of the driver
-snemo::FLExampleInputSourceDriver::FLExampleInputSourceDriver(
-  fhicl::ParameterSet const& ps,
-  art::ProductRegistryHelper&,
-  art::SourceHelper const& aSH)
+snemo::FLExampleInputSourceDriver::FLExampleInputSourceDriver(fhicl::ParameterSet const& ps,
+                                                              art::ProductRegistryHelper&,
+                                                              art::SourceHelper const& aSH)
   : srcHelper_{aSH}, currentFile_{}, currentEvent_{0}
 {
   // We don't yet register any products to art::ProductRegistryHelper is
@@ -55,13 +53,11 @@ snemo::FLExampleInputSourceDriver::FLExampleInputSourceDriver(
 }
 
 void
-snemo::FLExampleInputSourceDriver::readFile(std::string const& filename,
-                                            art::FileBlock*& fb)
+snemo::FLExampleInputSourceDriver::readFile(std::string const& filename, art::FileBlock*& fb)
 {
   mf::LogDebug("BrioInput") << "Reading file: " << filename;
   // Create the file block for the new file
-  fb =
-    new art::FileBlock{art::FileFormatVersion{1, "BRIOInput 2018.0"}, filename};
+  fb = new art::FileBlock{art::FileFormatVersion{1, "BRIOInput 2018.0"}, filename};
 
   // store current file and initialize event counter
   currentFile_ = filename;
@@ -69,12 +65,11 @@ snemo::FLExampleInputSourceDriver::readFile(std::string const& filename,
 }
 
 bool
-snemo::FLExampleInputSourceDriver::readNext(
-  art::RunPrincipal const* const inR,
-  art::SubRunPrincipal const* const inSR,
-  art::RunPrincipal*& outR,
-  art::SubRunPrincipal*& outSR,
-  art::EventPrincipal*& outE)
+snemo::FLExampleInputSourceDriver::readNext(art::RunPrincipal const* const inR,
+                                            art::SubRunPrincipal const* const inSR,
+                                            art::RunPrincipal*& outR,
+                                            art::SubRunPrincipal*& outSR,
+                                            art::EventPrincipal*& outE)
 {
   // This largely follows the "GeneratorTestDetail" test in art
   // which is effectively one
@@ -92,8 +87,7 @@ snemo::FLExampleInputSourceDriver::readNext(
   // Same for input SubRunPrincipal
   if (inSR == nullptr) {
     art::SubRunID srID{outR ? outR->run() : inR->run(), 0};
-    outSR = srcHelper_.makeSubRunPrincipal(
-      srID.run(), srID.subRun(), art::Timestamp{});
+    outSR = srcHelper_.makeSubRunPrincipal(srID.run(), srID.subRun(), art::Timestamp{});
   }
 
   // ALWAYS create outE...

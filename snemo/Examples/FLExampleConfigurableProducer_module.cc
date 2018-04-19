@@ -25,8 +25,7 @@ namespace {
     Atom<std::string> message{Name("message"), // This is the id of the parameter in FHiCL
                               Comment("message to be logged"), // Help on this parameter
                               "Hello World"}; // Default value (see also OptionalAtom<T>)
-    Atom<int> value{Name("value"),
-                    Comment("value of product to store in event")};
+    Atom<int> value{Name("value"), Comment("value of product to store in event")};
   };
 } // namespace
 
@@ -53,10 +52,10 @@ namespace snemo {
   };
 
   // Implementation
-  FLExampleConfigurableProducer::FLExampleConfigurableProducer(
-    Parameters const& ps)
-    : message_{ps().message()}, // Retrieve parameter via function calls, FHiCL handles the rest
-      value_{ps().value()}
+  FLExampleConfigurableProducer::FLExampleConfigurableProducer(Parameters const& ps)
+    : message_{ps().message()}
+    , // Retrieve parameter via function calls, FHiCL handles the rest
+    value_{ps().value()}
   {
     // This declares the module to produce an int, this
     // is for internal Art bookkeeping, and as we'll see,

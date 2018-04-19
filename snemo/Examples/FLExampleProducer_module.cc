@@ -29,7 +29,8 @@ namespace snemo {
 
   // Implementation
   FLExampleProducer::FLExampleProducer(fhicl::ParameterSet const& ps)
-    : message_{ps.get<std::string>("message", "Hello world")}, // For the message, we have a default
+    : message_{ps.get<std::string>("message", "Hello world")}
+    ,                            // For the message, we have a default
     value_{ps.get<int>("value")} // For the value, we leave out the default, Art
                                  // will throw unless we supply it
   {

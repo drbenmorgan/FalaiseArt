@@ -7,4 +7,3 @@
 #include "snemo/RawDataProducts/CalorimeterDigitCollection.h"
 #include "snemo/RawDataProducts/GeigerDigit.h"
 #include "snemo/RawDataProducts/GeigerDigitCollection.h"
-

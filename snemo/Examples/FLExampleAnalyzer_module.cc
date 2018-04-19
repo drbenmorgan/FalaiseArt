@@ -5,8 +5,8 @@
 #include "art/Framework/Principal/Event.h"
 
 // TFileService and associated ROOT interfaces
-#include "art/Framework/Services/Optional/TFileService.h"
 #include "TH1F.h"
+#include "art/Framework/Services/Optional/TFileService.h"
 
 #include "fhiclcpp/ParameterSet.h"
 
@@ -29,8 +29,7 @@ namespace snemo {
   };
 
   // Implementation
-  FLExampleAnalyzer::FLExampleAnalyzer(fhicl::ParameterSet const& ps)
-    : art::EDAnalyzer{ps}
+  FLExampleAnalyzer::FLExampleAnalyzer(fhicl::ParameterSet const& ps) : art::EDAnalyzer{ps}
   {
     // We should declare what we consume here
   }

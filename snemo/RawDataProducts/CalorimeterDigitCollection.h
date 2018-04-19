@@ -6,11 +6,10 @@
 #include <vector>
 
 namespace snemo {
-namespace RawDataProducts {
-//! Collection of CalorimeterDigits
-using CalorimeterDigitCollection = std::vector<CalorimeterDigit>;
-}
+  namespace RawDataProducts {
+    //! Collection of CalorimeterDigits
+    using CalorimeterDigitCollection = std::vector<CalorimeterDigit>;
+  }
 }
 
 #endif // SNEMO_RAWDATAPRODUCTS_CALORIMETERDIGITCOLLECTION_H
-

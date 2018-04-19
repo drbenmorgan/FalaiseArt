@@ -6,11 +6,10 @@
 #include <vector>
 
 namespace snemo {
-namespace RawDataProducts {
-//! Collection of GeigerDigits
-using GeigerDigitCollection = std::vector<GeigerDigit>;
-}
+  namespace RawDataProducts {
+    //! Collection of GeigerDigits
+    using GeigerDigitCollection = std::vector<GeigerDigit>;
+  }
 }
 
 #endif // SNEMO_RAWDATAPRODUCTS_GEIGERDIGITCOLLECTION_H
-
