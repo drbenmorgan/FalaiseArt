@@ -6,6 +6,11 @@ namespace RawDataProducts {
 //! Definition of raw digit from a tracker geiger cell
 struct GeigerDigit {
   // ... must be some channel identification here?
+
+  // This is just a bundle, but maybe look at
+  // std::array<uint64_t,5> anodeTimestamps;
+  // std::array<uint64_t,2> cathodeTimeStamps;
+  // as cleaner model?
   uint64_t   anodeTimeRegister_0; ///< Anodic timestamp from register 0
   uint64_t   anodeTimeRegister_1; ///< Anodic timestamp from register 1
   uint64_t   anodeTimeRegister_2; ///< Anodic timestamp from register 2

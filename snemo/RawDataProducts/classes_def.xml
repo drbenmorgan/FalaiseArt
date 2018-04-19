@@ -10,5 +10,6 @@
   <class name="art::Wrapper<snemo::RawDataProducts::CalorimeterDigitCollection>"/>
 
   <class name="snemo::RawDataProducts::GeigerDigit" classVersion="10"/>
+  <class name="snemo::RawDataProducts::GeigerDigitCollection"/>
   <class name="art::Wrapper<snemo::RawDataProducts::GeigerDigitCollection>"/>
 </lcgdict>
