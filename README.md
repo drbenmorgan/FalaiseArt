@@ -60,15 +60,17 @@ Getting Started
 Basic Art Usage
 ---------------
 
-Need the following:
+The `art` executable is used in a very similar fashion to `flsimulate` and
+`flreconstruct`. It implements a pipeline pattern for processing event-based
+data, with input/output from/to sources/sinks (which may be files or code).
+Input, Output, and Modules in the pipeline are configured via a configuration
+script in the JSON/YAML-like [FHiCL language](https://cdcvs.fnal.gov/redmine/projects/fhicl).
 
-- Basic fcl scripts to show structure and functionality
-- Mock fcl scripts for "flsimulate", "flreconstruct"
-- Basic source/producer/analyser modules for known SNemo modules
-  - These can just produce dummy/standard data for example
-- Basic brio-reader/translator for current flsimulate output.
-- Use of TFileService for analysis (though maybe have this above)
-- Mock up of data structures
+Even without any coding, it's possible to explore the basic functionality and
+behaviour of Art and FHiCL with some simple examples. These are documented with
+a basic walkthrough in the [README_examples.md](README_examples.md) file. Please
+see that document for further information.
+
 
 Building the FalaiseArt Plugins
 --------------------------------
@@ -106,9 +108,12 @@ $ make
 ...
 ```
 
-
-
-
+- Mock fcl scripts for "flsimulate", "flreconstruct"
+- Basic source/producer/analyser modules for known SNemo modules
+  - These can just produce dummy/standard data for example
+- Basic brio-reader/translator for current flsimulate output.
+- Use of TFileService for analysis (though maybe have this above)
+- Mock up of data structures
 
 Using FalaiseArt Plugins
 -------------------------
