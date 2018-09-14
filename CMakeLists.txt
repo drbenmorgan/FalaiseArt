@@ -1,6 +1,8 @@
 # - Toplevel CMake script for FalaiseArt
 cmake_minimum_required(VERSION 3.9)
+include(${CMAKE_CURRENT_LIST_DIR}/cmake/UPSPreShim.cmake)
 project(FalaiseArt VERSION 0.1.0)
+include(${CMAKE_CURRENT_LIST_DIR}/cmake/UPSPostShim.cmake)
 
 # - Cetbuildtools, and basic build env
 find_package(cetbuildtools REQUIRED)

@@ -49,7 +49,7 @@ Installing Art
 
    The installed products can be used in identical fashion to the CVMFS version:
 
-   ```
+   ``` console
    $ source <installprefix>/setups
    $ setup art v2_11_03 -q e17:debug
    $ art --help
@@ -60,9 +60,55 @@ Getting Started
 Basic Art Usage
 ---------------
 
+Need the following:
+
+- Basic fcl scripts to show structure and functionality
+- Mock fcl scripts for "flsimulate", "flreconstruct"
+- Basic source/producer/analyser modules for known SNemo modules
+  - These can just produce dummy/standard data for example
+- Basic brio-reader/translator for current flsimulate output.
+- Use of TFileService for analysis (though maybe have this above)
+- Mock up of data structures
 
 Building the FalaiseArt Plugins
 --------------------------------
+
+To build and use the FalaiseArt plugins, couple of additional steps are needed.
+The initial setup of art is similar, but one additional package is required:
+
+``` console
+$ source <productbasedir>/setups
+$ setup art v2_11_03 -q e17:debug
+$ setup cetbuildtools v7_04_00
+```
+
+Art is setup as before, the additional `setup` adding the FNAL buildtools for compiling
+UPS based code. There is nothing special going on here apart from the oddities of the UPS
+based install tree and environment setup.
+
+Just like Falaise, you should create a build directory for development and then run `cmake`,
+pointing it to the source directory, e.g.
+
+``` console
+$ ls
+FalaiseArt.git
+$ mkdir mybuild
+$ cd mybuild
+$ cmake ../FalaiseArt.git
+...
+```
+
+CMake will run as standard, and should warn you if any setup is missing. Simply type `make`
+to build everything:
+
+``` console
+$ make
+...
+```
+
+
+
+
 
 Using FalaiseArt Plugins
 -------------------------
