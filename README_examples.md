@@ -246,6 +246,22 @@ for them.
 Example FHiCL Scripts
 =====================
 
+A series of basic FHiCL scripts are installed in the [fcl/examples](fcl/examples)
+subdirectory. Art relies on absolute paths or relative paths plus the
+`FHICL_FILE_PATH` environment variable to locate FHiCL scripts, so the following
+assume that you are running `art` from the location of this README file in your
+clone. In this case, `art` will set `FHICL_FILE_PATH` to the current working
+directory, and we can pass the script paths relative to this.
+
+TODO: Add example of FHiCL's `#include` syntax to reuse configuration, e.g.
+
+```
+#include "snemo/simulation/flsimulate.fcl"
+
+... override setting here ...
+```
+
+
 `first.fcl`
 -----------
 
@@ -262,12 +278,10 @@ source : {
 }
 ```
 
-We can now pass this script to `art` using the `-c` argument (assuming
-we are in the same directory as the script, otherwise supply the full relative
-or absolute path):
+We can now pass this script to `art` using the `-c` argument:
 
 ```console
-$ art -c first.fcl
+$ art -c ./fcl/examples/first.fcl
 Expected environment variable FHICL_FILE_PATH is missing or empty: using "."
 INFO: using default process_name of "DUMMY".
 %MSG-i MF_INIT_OK:  Early 18-Mar-2018 16:14:36 GMT JobSetup
@@ -390,7 +404,7 @@ source : {
 We can run this in `art` and get 10 events generated:
 
 ```
-$ art -c second.fcl
+$ art -c fcl/examples/second.fcl
 Expected environment variable FHICL_FILE_PATH is missing or empty: using "."
 INFO: using default process_name of "DUMMY".
 %MSG-i MF_INIT_OK:  Early 18-Mar-2018 16:32:27 GMT JobSetup
@@ -422,7 +436,7 @@ if we spell the name of a parameter incorrectly, `art` will point to the locatio
 and cause of the error:
 
 ``` console
-$ art -c second_error.fcl
+$ art -c ./fcl/examples/second_error.fcl
 Expected environment variable FHICL_FILE_PATH is missing or empty: using "."
 INFO: using default process_name of "DUMMY".
 %MSG-i MF_INIT_OK:  Early 18-Mar-2018 16:34:04 GMT JobSetup
@@ -463,7 +477,7 @@ extension to distinguish them from possible analysis level files (of which more 
 Using our previous `second.fcl` file, we can output the events to file via:
 
 ```console
-$ art -c second.fcl -o second.art
+$ art -c ./fcl/examples/second.fcl -o second.art
 Expected environment variable FHICL_FILE_PATH is missing or empty: using "."
 INFO: using default process_name of "DUMMY".
 %MSG-i MF_INIT_OK:  Early 18-Mar-2018 17:19:27 GMT JobSetup
@@ -539,7 +553,7 @@ later on when we define more complex processing paths and multiple outputs.
 The script can be run like the others:
 
 ```console
-$ art -c third.fcl
+$ art -c ./fcl/examples/third.fcl
 Expected environment variable FHICL_FILE_PATH is missing or empty: using "."
 INFO: using default process_name of "DUMMY".
 %MSG-i MF_INIT_OK:  Early 18-Mar-2018 17:47:56 GMT JobSetup
@@ -576,15 +590,15 @@ TimeReport CPU = 1.037451 Real = 1.045176
 
 Art has completed and will exit with status 0.
 $
-$ file third.fcl
+$ file third.art
 third.art: ROOT file Version 61204 (Compression: 7)
 ```
 
-Even with the output file name on the fcl file, we can override it from
+Even with the output file name in the fcl file, we can override it from
 the command line with the `-o` argument:
 
 ``` console
-$ art -c third.fcl -o myfile.art
+$ art -c ./fcl/examples/third.fcl -o myfile.art
 ...
 $
 ```
@@ -619,7 +633,7 @@ Assuming that `third.art` exists in the current directory, then this can be
 run as:
 
 ```console
-$ art -c fourth.fcl
+$ art -c ./fcl/examples/fourth.fcl
 Expected environment variable FHICL_FILE_PATH is missing or empty: using "."
 INFO: using default process_name of "DUMMY".
 %MSG-i MF_INIT_OK:  Early 18-Mar-2018 18:51:42 GMT JobSetup
@@ -663,7 +677,7 @@ With a file based input module, we can also run the script using command line
 specified input and output files, e.g
 
 ```console
-$ art -s myinput.art -c fourth.fcl -o myoutput.art
+$ art -s myinput.art -c ./fcl/examples/fourth.fcl -o myoutput.art
 ...
 ```
 
@@ -789,7 +803,7 @@ outputs: {
 Running this through `art` gives:
 
 ```
-$ art -c fifth.fcl
+$ art -c ./fcl/examples/fifth.fcl
 INFO: using default process_name of "DUMMY".
 %MSG-i MF_INIT_OK:  Early 04-Apr-2018 23:23:50 BST JobSetup
 Messagelogger initialization complete.
@@ -836,7 +850,7 @@ only ran 5 times, as expected. We can confirm that these 5 events matched out ev
 selection criteria via the `fifth_print.fcl` file:
 
 ```console
-$ art -c fifth_print.fcl
+$ art -c ./fcl/examples/fifth_print.fcl
 INFO: using default process_name of "DUMMY".
 %MSG-i MF_INIT_OK:  Early 04-Apr-2018 23:26:02 BST JobSetup
 Messagelogger initialization complete.
