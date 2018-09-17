@@ -82,11 +82,14 @@ The initial setup of art is similar, but one additional package is required:
 $ source <productbasedir>/setups
 $ setup art v2_11_03 -q e17:debug
 $ setup cetbuildtools v7_04_00
+$ setup ninja v1_8_2
 ```
 
 Art is setup as before, the additional `setup` adding the FNAL buildtools for compiling
-UPS based code. There is nothing special going on here apart from the oddities of the UPS
-based install tree and environment setup.
+UPS based code, and the `ninja` build tools. There is nothing special going on here apart
+from the oddities of the UPS based install tree and environment setup. Ninja is used to
+speed up the build over the default `make` system, especially when using a CVMFS
+install of Art.
 
 Just like Falaise, you should create a build directory for development and then run `cmake`,
 pointing it to the source directory, e.g.
@@ -96,15 +99,15 @@ $ ls
 FalaiseArt.git
 $ mkdir mybuild
 $ cd mybuild
-$ cmake ../FalaiseArt.git
+$ cmake -GNinja ../FalaiseArt.git
 ...
 ```
 
-CMake will run as standard, and should warn you if any setup is missing. Simply type `make`
+CMake will run as standard, and should warn you if any setup is missing. Simply type `ninja`
 to build everything:
 
 ``` console
-$ make
+$ ninja
 ...
 ```
 
