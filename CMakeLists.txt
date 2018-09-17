@@ -15,17 +15,14 @@ cet_set_compiler_flags(DIAGS VIGILANT
   EXTRA_CXX_FLAGS -Wnon-virtual-dtor -Wdelete-non-virtual-dtor
   )
 
-
-
 #-----------------------------------------------------------------------
 # Dependencies
 # Add everything that the product uses directly (likely not complete yet...)
 #find_package(art 2.10 REQUIRED)
-#find_package(canvas_root_io REQUIRED)
-#find_package(ROOT 6 REQUIRED)
 
-# Bayeux (may need Falaise later) for bridging
-#find_package(Bayeux 3.0 REQUIRED)
+# - Falaise deps used via ExternalProject. This include is essentially
+#  find_package(Bayeux), and enables relevant imported targets
+include(snemo_externals/snemo_externals.cmake)
 
 # macros for art_dictionary and simple_plugin
 #include(ArtDictionary)
@@ -33,6 +30,10 @@ cet_set_compiler_flags(DIAGS VIGILANT
 
 #-----------------------------------------------------------------------
 # Build what we need
-#
+# - Test linkage
+add_executable(testLinkage testLinkage.cc)
+target_link_libraries(testLinkage PRIVATE Bayeux::Bayeux)
+
 #add_subdirectory(snemo)
-#add_subdirectory(FLFacade)
+
+

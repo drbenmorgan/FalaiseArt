@@ -1,0 +1,62 @@
+diff --git a/cmake/LPCCMakeSettings.cmake b/cmake/LPCCMakeSettings.cmake
+index 30d4d66..2157dbb 100644
+--- a/cmake/LPCCMakeSettings.cmake
++++ b/cmake/LPCCMakeSettings.cmake
+@@ -351,7 +351,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
+ 
+ # - Allow choice of standard
+ enum_option(${PROJECT_NAME_UC}_CXX_STANDARD
+-  VALUES "11" "14"
++  VALUES "11" "14" "17"
+   TYPE   STRING
+   DOC    "Choose C++ Standard to compile against"
+   )
+@@ -411,6 +411,9 @@ set(${PROJECT_NAME_UC}_CXX11_COMPILE_FEATURES
+ 
+ # - For C++14, add all features supported by current compiler
+ set(${PROJECT_NAME_UC}_CXX14_COMPILE_FEATURES "${CMAKE_CXX14_COMPILE_FEATURES}")
++# - For C++17, add all features supported by current compiler
++set(${PROJECT_NAME_UC}_CXX17_COMPILE_FEATURES "${CMAKE_CXX17_COMPILE_FEATURES}")
++
+ 
+ # - Process compile features based on selected standard
+ if(${PROJECT_NAME_UC}_CXX_STANDARD EQUAL 11)
+@@ -429,6 +432,25 @@ if(${PROJECT_NAME_UC}_CXX_STANDARD EQUAL 14)
+ 
+   list(APPEND ${PROJECT_NAME_UC}_CXX_COMPILE_FEATURES
+     ${${PROJECT_NAME_UC}_CXX11_COMPILE_FEATURES}
+-    ${${PROJECT_NAME_UC}_PROJECT_CXX14_COMPILE_FEATURES}
++    ${${PROJECT_NAME_UC}_CXX14_COMPILE_FEATURES}
++    )
++endif()
++
++# - If C++17 is requested, add all features supported by current
++#   compiler. If no 14 features are supported, fail under assumption
++#   compiler does not support it.
++if(${PROJECT_NAME_UC}_CXX_STANDARD EQUAL 17)
++  if(NOT ${PROJECT_NAME_UC}_CXX17_COMPILE_FEATURES)
++    message(FATAL_ERROR "C++17 requested, but no support for any C++17 features for compiler:\n"
++      "'${CMAKE_CXX_COMPILER_ID}', '${CMAKE_CXX_COMPILER_VERSION}'"
++      )
++  endif()
++
++  list(APPEND ${PROJECT_NAME_UC}_CXX_COMPILE_FEATURES
++    ${${PROJECT_NAME_UC}_CXX11_COMPILE_FEATURES}
++    ${${PROJECT_NAME_UC}_CXX14_COMPILE_FEATURES}
++    ${${PROJECT_NAME_UC}_CXX17_COMPILE_FEATURES}
+     )
+ endif()
++
++
+diff --git a/source/CMakeLists.txt b/source/CMakeLists.txt
+index a63d409..8475083 100644
+--- a/source/CMakeLists.txt
++++ b/source/CMakeLists.txt
+@@ -242,6 +242,7 @@ target_include_directories(Bayeux SYSTEM
+   PUBLIC
+    ${ROOT_INCLUDE_DIRS}
+    ${CLHEP_INCLUDE_DIRS}
++   ${CAMP_INCLUDE_DIRS}
+    )
+ target_link_libraries(Bayeux
+   PUBLIC
