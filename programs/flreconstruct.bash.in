@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+# A simple wrapper around art to:
+# - Provide a semi-familiar name
+# - Auto-set env vars needed by art, that we can derive from
+#   relative paths to this script. This means we don't have to
+#   create all the needed UPS setup for now
+
+# Basic settings/functions
+set -e
+
+die () {
+  local color=$'\033[31m\033[01m'
+  echo >&2 -n "$color"
+  echo >&2 "error: $1"$'\033[00m'
+  return 1
+}
+
+# - Update FHICL_FILE_PATH
+#   We don't yet copy the fcl files, so in the build context they
+#   we always be the project source dir, plus the art default of '.'
+export FHICL_FILE_PATH="@PROJECT_SOURCE_DIR@/fcl:.:${FHICL_FILE_PATH}"
+
+# - Update dynamic loader path...
+
+# - Run art
+which "art" > /dev/null || die "The \`art\` executable is not available in \`\$PATH\`"
+art $@

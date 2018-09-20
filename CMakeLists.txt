@@ -34,6 +34,6 @@ include(snemo_externals/snemo_externals.cmake)
 add_executable(testLinkage testLinkage.cc)
 target_link_libraries(testLinkage PRIVATE Bayeux::Bayeux)
 
-#add_subdirectory(snemo)
+add_subdirectory(programs)
 
 
