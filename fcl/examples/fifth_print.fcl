@@ -1,5 +1,6 @@
 # fifth_print.fcl
-# Shows input/output of events from/to ROOT
+# Just read/dump contents of "fifth.art". We just want to
+# see the correct EventIds were filtered into it.
 
 # All we need to create events is the source table
 source : {

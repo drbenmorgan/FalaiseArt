@@ -1,6 +1,6 @@
 # fifth.fcl
-# Shows input of events from ROOT, dump info on data
-# products in File.
+# Shows input of events from ROOT, filtering by EventID,
+# output of filtered events to another file.
 
 # All we need to create events is the source table
 source : {

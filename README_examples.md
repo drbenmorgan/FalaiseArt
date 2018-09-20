@@ -7,11 +7,12 @@ basics of use such as
 - The command line interface and options
 - Grammar and syntax of Art [FHiCL](https://cdcvs.fnal.gov/redmine/projects/fhicl) scripts
 
-Though the sections below are largely self-contained, additional information
-on FHiCL and art's FHiCL DSL are available at:
+Though the sections below are largely self-contained, they should be consulted
+together with the detailed information on FHiCL and art's FHiCL Domain-Specific Grammar
+available at:
 
-- [FHiCL Syntax and Semantics](https://cdcvs.fnal.gov/redmine/documents/327)
-- [Art Framework Parameters](https://cdcvs.fnal.gov/redmine/projects/art/wiki/ART_framework_parameters)
+- [FHiCL Language Syntax and Semantics](https://cdcvs.fnal.gov/redmine/documents/327)
+- [Art Framework FHiCL Grammar and Parameters](https://cdcvs.fnal.gov/redmine/projects/art/wiki/ART_framework_parameters)
 - [Overall Art Guide](https://cdcvs.fnal.gov/redmine/projects/art/wiki)
 
 
@@ -249,17 +250,95 @@ Example FHiCL Scripts
 A series of basic FHiCL scripts are installed in the [fcl/examples](fcl/examples)
 subdirectory. Art relies on absolute paths or relative paths plus the
 `FHICL_FILE_PATH` environment variable to locate FHiCL scripts, so the following
-assume that you are running `art` from the location of this README file in your
-clone. In this case, `art` will set `FHICL_FILE_PATH` to the current working
+assume that you are running `art` from the `fcl` subdirectory of your
+clone of this project. In this case, `art` will set `FHICL_FILE_PATH` to the current working
 directory, and we can pass the script paths relative to this.
 
-TODO: Add example of FHiCL's `#include` syntax to reuse configuration, e.g.
+The structure `art` expects FHiCL script to have is
 
 ```
-#include "snemo/simulation/flsimulate.fcl"
+# Inclusion of FHiCL "header" files
 
-... override setting here ...
+# Configuration of "services"
+services: {
+  # ...parameters...
+}
+
+# Configuration of Input Data Source
+source: {
+  # ...parameters...
+}
+
+# Configuration of Run/Event processing
+physics: {
+  # Configuration of modules that read/write data to the event, e,g. reconstruction
+  producers: {
+    # ...parameters...
+  }
+
+  # Configuration of modules that filter events, e.g. selection/cuts
+  filters: {
+    # ...parameters...
+  }
+
+  # Configuration of modules that read data, e.g. produce plots
+  analyzers: {
+    # ...parameters...
+  }
+
+  # Define processing paths/pipelines
+  # 1. Can string together producers and filters
+  #    Events flow through these in sequence
+  myPipelinePath: [myFirstProducer, myFilter, mySecondProducer]
+
+  # 2. Can list analyzers and outputs (see "output:" below)
+  #    where events will be dumped after producer/filter paths finish
+  myEndPath: [myAnalyzer, myOutputModule]
+}
+
+# Configuration of Output Data Sink
+output: {
+  # ... can have as many as we want, labels should be matched
+  # with end paths in "physics:"
+  myOutputModule: {
+    # ...parameters...
+  }
+}
 ```
+
+
+`zero.fcl`
+----------
+
+Art implements sensible defaults for processing, and so an empty (or rather, pure comment)
+ file as shown in [fcl/examples/zero.fcl](fcl/examples/zero.fcl) is perfectly valid.
+As shown above we pass this to `art` by passing it using the `-c` argument:
+
+```console
+$ art -c examples/zero.fcl
+Expected environment variable FHICL_FILE_PATH is missing or empty: using "."
+INFO: provided configuration file 'examples/zero.fcl' is empty:
+using minimal defaults and command-line options.
+INFO: using default process_name of "DUMMY".
+%MSG-i MF_INIT_OK:  Early 20-Sep-2018 14:07:39 BST JobSetup
+Messagelogger initialization complete.
+%MSG
+Begin processing the 1st record. run: 1 subRun: 0 event: 1 at 20-Sep-2018 14:07:40 BST
+
+TrigReport ---------- Event  Summary ------------
+TrigReport Events total = 1 passed = 1 failed = 0
+
+TimeReport ---------- Time  Summary ---[sec]----
+TimeReport CPU = 0.003854 Real = 0.004034
+
+MemReport  ---------- Memory  Summary ---[base-10 MB]----
+MemReport  VmPeak = 486.257 VmHWM = 156.262
+
+Art has completed and will exit with status 0.
+$
+```
+
+Your output will of course differ slightly depnding on time and exact system CPU.
 
 
 `first.fcl`
@@ -270,7 +349,7 @@ All that's needed at this point is the `source` table to define where events wil
 come from. As we don't have input files or other event source yet, we use Art's
 builtin `EmptyEvent` module to create, well, empty events. In the `source` table,
 we just specify the module to be the source, and any further parameters which
-for now we leave unset (`EmptyEvent` provides sensible defaults us):
+for now we leave unset (`EmptyEvent` provides sensible defaults for us):
 
 ```
 source : {
@@ -281,7 +360,7 @@ source : {
 We can now pass this script to `art` using the `-c` argument:
 
 ```console
-$ art -c ./fcl/examples/first.fcl
+$ art -c examples/first.fcl
 Expected environment variable FHICL_FILE_PATH is missing or empty: using "."
 INFO: using default process_name of "DUMMY".
 %MSG-i MF_INIT_OK:  Early 18-Mar-2018 16:14:36 GMT JobSetup
@@ -303,7 +382,7 @@ Here, only one event has been generated. We can change this on the command line
 using the `-n` argument. For example, to run 10 events:
 
 ``` console
-$ art -c first.fcl -n 10
+$ art -c examples/first.fcl -n 10
 Expected environment variable FHICL_FILE_PATH is missing or empty: using "."
 INFO: using default process_name of "DUMMY".
 %MSG-i MF_INIT_OK:  Early 18-Mar-2018 16:17:04 GMT JobSetup
@@ -351,7 +430,7 @@ Expected environment variable FHICL_FILE_PATH is missing or empty: using "."
 
         provider: art
         source  : / [ external source ] /art/Framework/Modules/EmptyEvent_source.cc
-        library : /Users/bmorgan/Software/Homebrew.git/lib/libart_Framework_Modules_EmptyEvent_source.dylib
+        library : /cvmfs/larsoft.opensciencegrid.org/products/art/v2_11_03/slf7.x86_64.e17.debug/lib/libart_Framework_Modules_EmptyEvent_source.so
 
     Allowed configuration
     ---------------------
@@ -392,10 +471,10 @@ Expected environment variable FHICL_FILE_PATH is missing or empty: using "."
 Art has completed and will exit with status 1.
 ```
 
-To set the number of events, we use the `maxEvents` parameter:
+To set the number of events, we add the `maxEvents` parameter to the `source:` table:
 
 ```
-source : {
+source: {
   module_type : EmptyEvent
   maxEvents   : 10
 }
@@ -404,7 +483,7 @@ source : {
 We can run this in `art` and get 10 events generated:
 
 ```
-$ art -c fcl/examples/second.fcl
+$ art -c examples/second.fcl
 Expected environment variable FHICL_FILE_PATH is missing or empty: using "."
 INFO: using default process_name of "DUMMY".
 %MSG-i MF_INIT_OK:  Early 18-Mar-2018 16:32:27 GMT JobSetup
@@ -431,12 +510,14 @@ Art has completed and will exit with status 0.
 $
 ```
 
+You can still pass the `-n` command line argument to override the number of events.
+
 Part of the FHiCL validation system is helpful error messaging. For example,
 if we spell the name of a parameter incorrectly, `art` will point to the location
 and cause of the error:
 
 ``` console
-$ art -c ./fcl/examples/second_error.fcl
+$ art -c examples/second_error.fcl
 Expected environment variable FHICL_FILE_PATH is missing or empty: using "."
 INFO: using default process_name of "DUMMY".
 %MSG-i MF_INIT_OK:  Early 18-Mar-2018 16:34:04 GMT JobSetup
@@ -472,12 +553,12 @@ As with the number of events, output to file can be controlled by a command
 line argument or FHiCL parameter. In the former case, we can use the `-o` command
 line argument to `art` which defaults output to ROOT format via the `RootOutput`
 module. Though art output files are ROOT format, convention is to use the `.art`
-extension to distinguish them from possible analysis level files (of which more later).
+extension to distinguish them from possible analysis level files.
 
 Using our previous `second.fcl` file, we can output the events to file via:
 
 ```console
-$ art -c ./fcl/examples/second.fcl -o second.art
+$ art -c examples/second.fcl -o second.art
 Expected environment variable FHICL_FILE_PATH is missing or empty: using "."
 INFO: using default process_name of "DUMMY".
 %MSG-i MF_INIT_OK:  Early 18-Mar-2018 17:19:27 GMT JobSetup
@@ -526,17 +607,17 @@ of processing, we must also add the `physics` table so we
 can put the output in this:
 
 ```
-source : {
+source: {
   module_type : EmptyEvent
   maxEvents   : 10
   firstRun    :  1
 }
 
-physics : {
+physics: {
   op: [ myOutput ]
 }
 
-outputs : {
+outputs: {
   myOutput : {
     module_type : RootOutput
     fileName    : "third.art"
@@ -553,7 +634,7 @@ later on when we define more complex processing paths and multiple outputs.
 The script can be run like the others:
 
 ```console
-$ art -c ./fcl/examples/third.fcl
+$ art -c examples/third.fcl
 Expected environment variable FHICL_FILE_PATH is missing or empty: using "."
 INFO: using default process_name of "DUMMY".
 %MSG-i MF_INIT_OK:  Early 18-Mar-2018 17:47:56 GMT JobSetup
@@ -598,7 +679,7 @@ Even with the output file name in the fcl file, we can override it from
 the command line with the `-o` argument:
 
 ``` console
-$ art -c ./fcl/examples/third.fcl -o myfile.art
+$ art -c examples/third.fcl -o myfile.art
 ...
 $
 ```
@@ -633,7 +714,7 @@ Assuming that `third.art` exists in the current directory, then this can be
 run as:
 
 ```console
-$ art -c ./fcl/examples/fourth.fcl
+$ art -c examples/fourth.fcl
 Expected environment variable FHICL_FILE_PATH is missing or empty: using "."
 INFO: using default process_name of "DUMMY".
 %MSG-i MF_INIT_OK:  Early 18-Mar-2018 18:51:42 GMT JobSetup
@@ -677,7 +758,7 @@ With a file based input module, we can also run the script using command line
 specified input and output files, e.g
 
 ```console
-$ art -s myinput.art -c ./fcl/examples/fourth.fcl -o myoutput.art
+$ art -s myinput.art -c examples/fourth.fcl -o myoutput.art
 ...
 ```
 
@@ -691,7 +772,7 @@ the module can take.
 
 Even though we are not processing events, we can still demonstrate simple filtering
 (i.e. cuts) of events based on their Run/SubRun/Event ids. Art provides a filter module
-`EventIDFilter` with which we can do this. We'll use the output of `third.fcl` as the input,
+`EventIDFilter` with which we can do this. We'll use the file output by `third.fcl` as the input,
 and only select events with id 2,4 and 6,7,8. Looking at the output of `art --print-description EventIDFilter`:
 
 ```console
@@ -704,7 +785,7 @@ $ art --print-description EventIDFilter
         provider: art
         type    : filter
         source  : / [ external source ] /art/Framework/Modules/EventIDFilter_module.cc
-        library : /Users/bmorgan/Software/Homebrew.git/lib/libart_Framework_Modules_EventIDFilter_module.dylib
+        library : /cvmfs/larsoft.opensciencegrid.org/products/art/v2_11_03/slf7.x86_64.e17.debug/lib/libart_Framework_Modules_EmptyEvent_source.so
 
     Allowed configuration
     ---------------------
@@ -748,7 +829,7 @@ $ art --print-description EventIDFilter
 ====================================================================================================
 ```
 
-To filter on this we need to add a `filters` table to the `physics` table and a trigger path for this
+To filter on this we need to add a `filters` table to the `physics` table and a path for this
 filter. Because of the way art handles filtering, we also look at the `RootOutput` description and see:
 
 ```console
@@ -771,7 +852,7 @@ $ art --print-description RootOutput
 ...
 ```
 
-so we also need to add the filtering trigger path to `SelectEvents`. This leads to the fhicl file:
+so we also need to add the label of the processing/filtering path to `SelectEvents`. This leads to the fhicl file:
 
 ```
 source : {
@@ -803,7 +884,7 @@ outputs: {
 Running this through `art` gives:
 
 ```
-$ art -c ./fcl/examples/fifth.fcl
+$ art -c examples/fifth.fcl
 INFO: using default process_name of "DUMMY".
 %MSG-i MF_INIT_OK:  Early 04-Apr-2018 23:23:50 BST JobSetup
 Messagelogger initialization complete.
@@ -850,7 +931,7 @@ only ran 5 times, as expected. We can confirm that these 5 events matched out ev
 selection criteria via the `fifth_print.fcl` file:
 
 ```console
-$ art -c ./fcl/examples/fifth_print.fcl
+$ art -c examples/fifth_print.fcl
 INFO: using default process_name of "DUMMY".
 %MSG-i MF_INIT_OK:  Early 04-Apr-2018 23:26:02 BST JobSetup
 Messagelogger initialization complete.
@@ -879,11 +960,170 @@ the art Wiki on [paths](https://cdcvs.fnal.gov/redmine/projects/art/wiki/Paths)
 and [filtering](https://cdcvs.fnal.gov/redmine/projects/art/wiki/Filtering_events).
 
 
+`sixth.fcl`
+-----------
+
+FHiCL scripts can, much like C/C++, include others to provide a standard set of parameters.
+The exact syntax of this feature is discussed in Section 9 of the [FHiCL Quickstart Guide](https://cdcvs.fnal.gov/redmine/documents/327).
+In the simplest case, we can reproduce the behaviour of the `third.fcl` script via
+including it in a new script:
+
+```
+#include "examples/third.fcl"
+```
+
+Running this in `art` yields identical results to before:
+
+```console
+$ art -c examples/sixth.fcl
+... output as for third.fcl ...
+$
+```
+
+The `#include` mechanism is extremely useful to separate concerns and provide
+packaged, experiment specific configurations for things like processing modules.
+
+
+`seventh.fcl`
+-------------
+
+Unless specified, FHiCL allows parameter values to be overridden in scripts, with
+a "latest wins" policy. In combination with `#include`, we can
+
+- Include a packaged configuration script
+- Override 1-N parameters to adjust behaviour.
+
+For example, we can reuse our `third.fcl` configuration, and override the number of events
+and output file:
+
+```
+#include "examples/third.fcl"
+
+source: {
+  maxEvents: 100
+}
+
+outputs.myOutput.fileName: "seventh.art"
+```
+
+Running this as
+
+```console
+$ art -c examples/seventh.fcl
+```
+
+should produce similar output to the third example, and yield a `seventh.art`
+output file.
+
+This can easily be extended to more complex tasks, e.g. profiling
+changes to a few reconstruction parameters.
+
+Note that FHiCL does require that all overriden parameters be "fully
+qualified". See Section 5.4 "Table Values" of the [FHiCL Quickstart Guide](https://cdcvs.fnal.gov/redmine/documents/327)
+
+
+`eighth.fcl`
+------------
+
+Straight inclusion of a "bare" script is allowed by the FHiCL grammar, but it is
+recommended to package scripts for inclusion as "Prologs". Section 8 on Prologs
+in the [FHiCL Quickstart Guide](https://cdcvs.fnal.gov/redmine/documents/327)
+covers these in more detail, the main message being that they help to keep
+processing clean and prevent name clashes.
+
+In [fcl/examples/empty_event.fcl](fcl/examples/empty_event.fcl), we've put the
+configuration for the `EmptyEvent` module as a nested table inside a prolog.
+In [fcl/examples/eighth.fcl](fcl/examples/eighth.fcl), we include this script
+and use FHiCL's "reference" mechanism to use it as our source:
+
+```
+source : {
+  @table::falaise.sources.empty_event
+}
+```
+
+See Section 7 on References in the [FHiCL Quickstart Guide](https://cdcvs.fnal.gov/redmine/documents/327)
+for full details on this syntax.
+
+
+`ninth.fcl`
+-----------
+
+FHiCL parameters are mutable, i.e. can be overriden as shown earlier, by default.
+We may have use cases where we need to provide a parameter, but it should not
+be allowed to be overriden. Parameters can be marked as (effectively) "read only"
+with a special `@protect_error` syntax (see Section 10 of the [FHiCL Quickstart Guide](https://cdcvs.fnal.gov/redmine/documents/327)).
+In [fcl/examples/protected_empty_event.fcl](fcl/examples/empty_event.fcl), we
+use this to lock down the `maxEvents` parameter:
+
+```
+BEGIN_PROLOG
+falaise : {
+  sources : {
+    empty_event: {
+      module_type: EmptyEvent
+      # Try to substitute this later will yield an error
+      maxEvents @protect_error: 10
+      firstRun: 1
+    }
+  }
+}
+END_PROLOG
+```
+
+In [fcl/examples/ninth.fcl](fcl/examples/ninth.fcl), we try to override
+`maxEvents`:
+
+```
+#include "examples/protected_empty_event.fcl"
+
+source : {
+  @table::falaise.sources.empty_event
+}
+
+physics : {
+  op: [ myOutput ]
+}
+
+outputs : {
+  myOutput : {
+    module_type : RootOutput
+    fileName    : "third.art"
+  }
+}
+
+source.maxEvents: 75
+```
+
+but running this thorugh art will yield an error:
+
+```
+Expected environment variable FHICL_FILE_PATH is missing or empty: using "."
+Failed to parse the configuration file 'examples/ninth.fcl' with exception
+---- Parse error BEGIN
+  Error in assignment:
+  ---- Protection violation BEGIN
+    Part "maxEvents" of specification to be overwritten
+    "source.maxEvents" is protected on line 11 of file "./examples/ninth.fcl"
+  ---- Protection violation END
+   at line 29, character 1, of file "./examples/ninth.fcl"
+
+  source.maxEvents: 75
+  ^
+---- Parse error END
+
+Art has completed and will exit with status 90.
+$
+
+Art is helpful here in telling us why the error occurred, together with
+the file and line numbers related to it.
+
+
 Going Further
 =============
 
 The above sections show the basic functionality of `art` and control of input, output
-and event processing. To go further we need to define our experiment's data model so
+and event processing using FHiCL scripting. To go further we need to define our experiment's data model so
 that we can store this in events for processing.
 
 
