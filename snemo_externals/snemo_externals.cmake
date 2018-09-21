@@ -46,6 +46,6 @@ ExternalProject_Add(BAYEUX_EP
 set(Bayeux_LIBRARY ${PROJECT_BINARY_DIR}/BuildProducts/lib/${CMAKE_SHARED_LIBRARY_PREFIX}Bayeux${CMAKE_SHARED_LIBRARY_SUFFIX})
 add_library(Bayeux::Bayeux UNKNOWN IMPORTED)
 set_property(TARGET Bayeux::Bayeux PROPERTY IMPORTED_LOCATION ${Bayeux_LIBRARY})
-set_property(TARGET Bayeux::Bayeux PROPERTY INTERFACE_INCLUDE_DIRS "${PROJECT_BINARY_DIR}/BuildProducts/include;${PROJECT_BINARY_DIR}/BuildProducts/include/bayeux")
+set_property(TARGET Bayeux::Bayeux PROPERTY INTERFACE_INCLUDE_DIRECTORIES "${PROJECT_BINARY_DIR}/BuildProducts/include;${PROJECT_BINARY_DIR}/BuildProducts/include/bayeux")
+set_property(TARGET Bayeux::Bayeux PROPERTY INTERFACE_LINK_LIBRARIES "${Boost_LIBRARIES}")
 add_dependencies(Bayeux::Bayeux BAYEUX_EP)
-
