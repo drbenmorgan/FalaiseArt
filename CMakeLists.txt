@@ -36,4 +36,4 @@ target_link_libraries(testLinkage PRIVATE Bayeux::Bayeux)
 
 add_subdirectory(programs)
 
-
+add_subdirectory(fcl)

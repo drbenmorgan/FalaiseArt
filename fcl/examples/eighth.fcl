@@ -19,7 +19,7 @@ physics : {
 outputs : {
   myOutput : {
     module_type : RootOutput
-    fileName    : "third.art"
+    fileName    : "eighth.art"
   }
 }
 
