@@ -13,8 +13,10 @@
 // Falaise/Bayeux
 #include "bayeux/brio/reader.h"
 #include "bayeux/datatools/things.h"
+#include "bayeux/mctools/simulated_data.h"
 
 #include "snemo/datamodel/event_header.h"
+
 
 // Forward declare implementation of input source
 namespace snemo {
@@ -121,6 +123,8 @@ snemo::BrioInputSourceDriver::readNext(
   auto EH = e.get<snemo::datamodel::event_header>("EH");
   auto eID = EH.get_id().get_event_number();
   EH.tree_dump();
+  auto SD = e.get<mctools::simulated_data>("SD");
+  SD.tree_dump();
 
   outE = srcHelper_.makeEventPrincipal(outR ? outR->run() : inR->run(),
                                        outSR ? outSR->subRun() : inSR->subRun(),
