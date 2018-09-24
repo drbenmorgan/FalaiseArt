@@ -36,4 +36,12 @@
 
   <class name="snemo::GenBBPrimaryEvent" classVersion="10"/>
   <class name="art::Wrapper<snemo::GenBBPrimaryEvent>"/>
+
+  <!-- Reconstruction level types -->
+  <class name="snemo::CalorimeterHit" classVersion="10"/>
+  <class name="snemo::CalorimeterHitCollection" classVersion="10"/>
+  <class name="art::Wrapper<snemo::CalorimeterHitCollection>" classVersion="10"/>
+  <class name="snemo::GeigerHit" classVersion="10"/>
+  <class name="snemo::GeigerHitCollection" classVersion="10"/>
+  <class name="art::Wrapper<snemo::GeigerHitCollection>" classVersion="10"/>
 </lcgdict>

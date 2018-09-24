@@ -10,7 +10,14 @@
 #include "bayeux/datatools/properties.h"
 #include "bayeux/geomtools/geom_id.h"
 
+// MC
 #include "snemo/datamodel/StepHit.h"
 #include "snemo/datamodel/StepHitCollection.h"
-
 #include "snemo/datamodel/GenBBPrimaryEvent.h"
+
+// Processing
+#include "snemo/datamodel/CalorimeterHit.h"
+#include "snemo/datamodel/CalorimeterHitCollection.h"
+#include "snemo/datamodel/GeigerHit.h"
+#include "snemo/datamodel/GeigerHitCollection.h"
+
