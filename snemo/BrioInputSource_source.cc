@@ -16,7 +16,7 @@
 #include "bayeux/mctools/simulated_data.h"
 
 #include "snemo/datamodel/event_header.h"
-
+#include "snemo/datamodel/StepHitCollection.h"
 
 // Forward declare implementation of input source
 namespace snemo {
@@ -53,6 +53,7 @@ class snemo::BrioInputSourceDriver {
   brio::reader bInput_;     ///< Reader for BRIO files
   std::string const GI_STORE {"GI"};
   std::string const ER_STORE {"ER"};
+  std::set<std::string> const stepHitCategories {"gg", "calo", "xcalo", "gveto"};
 };
 
 // Implementation of the driver
@@ -64,9 +65,10 @@ snemo::BrioInputSourceDriver::BrioInputSourceDriver(
 {
   // Products this source will reconstitute into Principals
   // string is the module label.
-  helper.reconstitutes<int, art::InEvent>("BrioInputSource");
-  // Need a dictionary to do the following:
-  //helper.reconstitutes<datatools::properties, art::InEvent>("BrioInputSource");
+  // At the event level, we add each expected bank of hits, even if empty
+  for (auto hitCat : stepHitCategories) {
+    helper.reconstitutes<snemo::StepHitCollection, art::InEvent>("BrioInputSource",hitCat);
+  }
 }
 
 
@@ -103,14 +105,15 @@ snemo::BrioInputSourceDriver::readNext(
   // checking for boundaries, don't expect them in Brio files)
   if (inR == nullptr) {
     outR = srcHelper_.makeRunPrincipal(1, art::Timestamp{});
-    // GI_STORE likely has run level info, maybe even global (where it would be
-    // handled in open/close file and Service attachment
+    //GI_STORE likely has run level info, maybe even global (where it would be
+    //handled in open/close file and Service attachment
     //datatools::properties p;
     //bInput_.load(p, GI_STORE, 0);
     //p.tree_dump();
     //art::put_product_in_principal(std::make_unique<datatools::properties>(p), *outE, "BrioInputSource");
   }
-  // Same for input SubRunPrincipal
+  // Same for input SubRunPrincipal, need to create, but BRIO files have no
+  // concept of subrun so we simply match Run ID
   if (inSR == nullptr) {
     art::SubRunID srID{outR ? outR->run() : inR->run(), 0};
     outSR = srcHelper_.makeSubRunPrincipal(
@@ -120,17 +123,47 @@ snemo::BrioInputSourceDriver::readNext(
   // ALWAYS create outE...
   datatools::things e;
   bInput_.load_next(e, ER_STORE);
+  // ER_STORE expected to hold two banks
+  // "EH" is a simple header. We only really need the event number for
+  // now.
   auto EH = e.get<snemo::datamodel::event_header>("EH");
   auto eID = EH.get_id().get_event_number();
-  EH.tree_dump();
-  auto SD = e.get<mctools::simulated_data>("SD");
-  SD.tree_dump();
-
   outE = srcHelper_.makeEventPrincipal(outR ? outR->run() : inR->run(),
                                        outSR ? outSR->subRun() : inSR->subRun(),
                                        eID,
                                        art::Timestamp{});
-  art::put_product_in_principal(std::make_unique<int>(eID), *outE, "BrioInputSource");
+
+  // "SD" is the simulated data itself
+  auto SD = e.get<mctools::simulated_data>("SD");
+
+  //SD has substructure that we need to pull out
+  // 1. Vertex (vector)
+  // 2. Time (double, though generally always zero for sim)
+  // 3. Primary Event (genbb_primary event)
+  //  - Strictly speaking, all of the above are MC products, so
+  //    maybe should reconstitute together? Simulation does of
+  //    course treat them separately...
+  // 4. Properties (but always empty)
+  // 5. Step hits (generally always collections of "handles":
+  //    - In this case, banks may be:
+  //      - calo
+  //      - xcalo
+  //      - gveto
+  //      - gg
+  // means we should end up with one product for each of these in
+  // the event, but some may be empty
+
+  // Iterate over expected banks and fill if required
+  for (auto hitCat : stepHitCategories) {
+    auto HC = std::make_unique<snemo::StepHitCollection>();
+
+    if (SD.has_step_hits(hitCat)) {
+      for (const auto& hitHandle : SD.get_step_hits(hitCat)) {
+        HC->push_back(snemo::StepHit(hitHandle.get()));
+      }
+    }
+    art::put_product_in_principal(std::move(HC), *outE, "BrioInputSource", hitCat);
+  }
 
   return true;
 }
