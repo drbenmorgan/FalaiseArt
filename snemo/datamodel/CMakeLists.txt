@@ -16,7 +16,9 @@ target_link_libraries(snemo_datamodel_bridge
     Bayeux::Bayeux
   )
 
-# TBR: May not need a dictionary if we simply translate
-# 2. The art dictionary
-#    Must link it with the interface layer
-#art_dictionary(DICTIONARY_LIBRARIES FLFacade_DataModels)
+# Create the Art dictionary so we can store Bayeux types directly
+# in ROOT (likely also need ROOT_INCLUDE_DIRS at runtime to avoid
+# "Cling autoload" issues.
+include_directories(${Bayeux_INCLUDE_DIRS})
+art_dictionary(DICTIONARY_LIBRARIES Bayeux::Bayeux)
+
