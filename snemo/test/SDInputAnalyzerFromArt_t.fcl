@@ -1,0 +1,13 @@
+source: {
+  module_type: RootInput
+}
+
+physics: {
+  analyzers: {
+    tester: {
+      module_type: SDInputAnalyzer
+    }
+  }
+
+  analysisPath: [ tester ]
+}

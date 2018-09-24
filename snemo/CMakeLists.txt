@@ -10,8 +10,9 @@ add_subdirectory(datamodel)
 # lists the short name of the module, the second the underlying
 # type (source, module ={producer,...}), the remainder any
 # additional libraries needed.
-
-# - Example input source, just produces empty events
+include_directories(${PROJECT_SOURCE_DIR})
 simple_plugin(BrioInputSource "source" Bayeux::Bayeux snemo_datamodel_bridge)
+simple_plugin(SDInputAnalyzer "module" Bayeux::Bayeux CLHEP)
+
 
 add_subdirectory(test)

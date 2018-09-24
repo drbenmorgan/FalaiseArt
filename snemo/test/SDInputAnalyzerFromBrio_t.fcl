@@ -1,0 +1,13 @@
+source: {
+  module_type: BrioInputSource
+}
+
+physics: {
+  analyzers: {
+    tester: {
+      module_type: SDInputAnalyzer
+    }
+  }
+
+  analysisPath: [ tester ]
+}
