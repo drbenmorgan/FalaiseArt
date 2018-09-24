@@ -21,6 +21,12 @@ die () {
 export FHICL_FILE_PATH="@PROJECT_SOURCE_DIR@/fcl:.:${FHICL_FILE_PATH}"
 
 # - Update dynamic loader path...
+# Eventually this should be CET_PLUGIN_PATH, but Art as of 2.11.3 doesn't
+# seem to use this fully...
+export LD_LIBRARY_PATH="@PROJECT_BINARY_DIR@/lib:$LD_LIBRARY_PATH"
+
+# - Update ROOT_INCLUDE_PATH for Cling
+export ROOT_INCLUDE_PATH="@PROJECT_BINARY_DIR@/BuildProducts/include:@PROJECT_BINARY_DIR@/BuildProducts/include/bayeux:@PROJECT_SOURCE_DIR@:$ROOT_INCLUDE_PATH"
 
 # - Run art
 which "art" > /dev/null || die "The \`art\` executable is not available in \`\$PATH\`"
