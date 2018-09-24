@@ -55,6 +55,7 @@ class snemo::BrioInputSourceDriver {
   std::string const GI_STORE {"GI"};
   std::string const ER_STORE {"ER"};
   std::set<std::string> const stepHitCategories {"gg", "calo", "xcalo", "gveto"};
+  std::string const outputLabel {"SD"}; ///< Matches expectation
 };
 
 // Implementation of the driver
@@ -68,14 +69,14 @@ snemo::BrioInputSourceDriver::BrioInputSourceDriver(
   // string is the module label.
   // At the event level, we add:
   // 1. Primary vertex:
-  helper.reconstitutes<geomtools::vector_3d, art::InEvent>("BrioInputSource");
+  helper.reconstitutes<geomtools::vector_3d, art::InEvent>(outputLabel);
   // 2. Time (always null in SD)
-  helper.reconstitutes<double, art::InEvent>("BrioInputSource");
+  helper.reconstitutes<double, art::InEvent>(outputLabel);
   // 3. Primary event
-  helper.reconstitutes<snemo::GenBBPrimaryEvent, art::InEvent>("BrioInputSource");
+  helper.reconstitutes<snemo::GenBBPrimaryEvent, art::InEvent>(outputLabel);
   // each expected bank of hits, even if empty
   for (auto hitCat : stepHitCategories) {
-    helper.reconstitutes<snemo::StepHitCollection, art::InEvent>("BrioInputSource",hitCat);
+    helper.reconstitutes<snemo::StepHitCollection, art::InEvent>(outputLabel,hitCat);
   }
 }
 
@@ -93,7 +94,7 @@ snemo::BrioInputSourceDriver::readFile(std::string const& filename,
 
   // Create the file block for the new file
   fb =
-    new art::FileBlock{art::FileFormatVersion{1, "BRIOInput 3.3"}, filename};
+    new art::FileBlock{art::FileFormatVersion{1, "FLSIMULATE 3.3"}, filename};
 }
 
 bool
@@ -145,14 +146,14 @@ snemo::BrioInputSourceDriver::readNext(
   auto SD = e.get<mctools::simulated_data>("SD");
   // 1. Vertex (CLHEP 3vector)
   auto vertex = std::make_unique<geomtools::vector_3d>(SD.get_vertex());
-  art::put_product_in_principal(std::move(vertex), *outE, "BrioInputSource");
+  art::put_product_in_principal(std::move(vertex), *outE, outputLabel);
 
   // 2. Time (double, though generally always zero for sim)
-  art::put_product_in_principal(std::make_unique<double>(SD.get_time()), *outE, "BrioInputSource");
+  art::put_product_in_principal(std::make_unique<double>(SD.get_time()), *outE, outputLabel);
 
   // 3. Primary Event (genbb_primary event)
   auto primary = std::make_unique<snemo::GenBBPrimaryEvent>(SD.get_primary_event());
-  art::put_product_in_principal(std::move(primary), *outE, "BrioInputSource");
+  art::put_product_in_principal(std::move(primary), *outE, outputLabel);
 
   //  - Strictly speaking, all of the above are MC products, so
   //    maybe should reconstitute together? Simulation does of
@@ -172,7 +173,7 @@ snemo::BrioInputSourceDriver::readNext(
         HC->push_back(snemo::StepHit(hitHandle.get()));
       }
     }
-    art::put_product_in_principal(std::move(HC), *outE, "BrioInputSource", hitCat);
+    art::put_product_in_principal(std::move(HC), *outE, outputLabel, hitCat);
   }
 
   return true;
