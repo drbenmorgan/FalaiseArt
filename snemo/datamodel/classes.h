@@ -12,3 +12,5 @@
 
 #include "snemo/datamodel/StepHit.h"
 #include "snemo/datamodel/StepHitCollection.h"
+
+#include "snemo/datamodel/GenBBPrimaryEvent.h"

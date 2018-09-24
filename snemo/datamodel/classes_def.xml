@@ -28,4 +28,12 @@
   <class name="snemo::StepHit" classVersion="10"/>
   <class name="snemo::StepHitCollection" classVersion="10"/>
   <class name="art::Wrapper<snemo::StepHitCollection>"/>
+
+  <!-- GenBB types -->
+  <class name="genbb::primary_particle" classVersion="10"/>
+  <class name="std::list<genbb::primary_particle>" classVersion="10"/>
+  <class name="genbb::primary_event" classVersion="10"/>
+
+  <class name="snemo::GenBBPrimaryEvent" classVersion="10"/>
+  <class name="art::Wrapper<snemo::GenBBPrimaryEvent>"/>
 </lcgdict>

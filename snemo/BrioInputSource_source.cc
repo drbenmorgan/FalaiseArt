@@ -17,6 +17,7 @@
 
 #include "snemo/datamodel/event_header.h"
 #include "snemo/datamodel/StepHitCollection.h"
+#include "snemo/datamodel/GenBBPrimaryEvent.h"
 
 // Forward declare implementation of input source
 namespace snemo {
@@ -65,7 +66,14 @@ snemo::BrioInputSourceDriver::BrioInputSourceDriver(
 {
   // Products this source will reconstitute into Principals
   // string is the module label.
-  // At the event level, we add each expected bank of hits, even if empty
+  // At the event level, we add:
+  // 1. Primary vertex:
+  helper.reconstitutes<geomtools::vector_3d, art::InEvent>("BrioInputSource");
+  // 2. Time (always null in SD)
+  helper.reconstitutes<double, art::InEvent>("BrioInputSource");
+  // 3. Primary event
+  helper.reconstitutes<snemo::GenBBPrimaryEvent, art::InEvent>("BrioInputSource");
+  // each expected bank of hits, even if empty
   for (auto hitCat : stepHitCategories) {
     helper.reconstitutes<snemo::StepHitCollection, art::InEvent>("BrioInputSource",hitCat);
   }
@@ -133,13 +141,19 @@ snemo::BrioInputSourceDriver::readNext(
                                        eID,
                                        art::Timestamp{});
 
-  // "SD" is the simulated data itself
+  // "SD" is the simulated data itself, and has substructure that we convert:
   auto SD = e.get<mctools::simulated_data>("SD");
+  // 1. Vertex (CLHEP 3vector)
+  auto vertex = std::make_unique<geomtools::vector_3d>(SD.get_vertex());
+  art::put_product_in_principal(std::move(vertex), *outE, "BrioInputSource");
 
-  //SD has substructure that we need to pull out
-  // 1. Vertex (vector)
   // 2. Time (double, though generally always zero for sim)
+  art::put_product_in_principal(std::make_unique<double>(SD.get_time()), *outE, "BrioInputSource");
+
   // 3. Primary Event (genbb_primary event)
+  auto primary = std::make_unique<snemo::GenBBPrimaryEvent>(SD.get_primary_event());
+  art::put_product_in_principal(std::move(primary), *outE, "BrioInputSource");
+
   //  - Strictly speaking, all of the above are MC products, so
   //    maybe should reconstitute together? Simulation does of
   //    course treat them separately...
@@ -150,10 +164,6 @@ snemo::BrioInputSourceDriver::readNext(
   //      - xcalo
   //      - gveto
   //      - gg
-  // means we should end up with one product for each of these in
-  // the event, but some may be empty
-
-  // Iterate over expected banks and fill if required
   for (auto hitCat : stepHitCategories) {
     auto HC = std::make_unique<snemo::StepHitCollection>();
 
