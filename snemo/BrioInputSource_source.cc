@@ -169,7 +169,9 @@ snemo::BrioInputSourceDriver::readNext(
     auto HC = std::make_unique<snemo::StepHitCollection>();
 
     if (SD.has_step_hits(hitCat)) {
-      for (const auto& hitHandle : SD.get_step_hits(hitCat)) {
+      auto stepHits = SD.get_step_hits(hitCat);
+      HC->reserve(stepHits.size());
+      for (const auto& hitHandle : stepHits) {
         HC->push_back(snemo::StepHit(hitHandle.get()));
       }
     }
