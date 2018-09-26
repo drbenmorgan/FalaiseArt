@@ -2,7 +2,7 @@ BEGIN_PROLOG
 
 snemo: {
   producers: {
-    CaloCalibrator: {
+    CaloCD: {
       module_type: MockCalorimeterCalibrator
       tagLabel: "SD:calo"
       lowEnergyThreshold: 50
@@ -15,7 +15,7 @@ snemo: {
       }
     }
 
-    XCaloCalibrator: {
+    XCaloCD: {
       module_type: MockCalorimeterCalibrator
       tagLabel: "SD:xcalo"
       lowEnergyThreshold: 50
@@ -29,7 +29,7 @@ snemo: {
     }
   }
 
-  mock_calibration: [CaloCalibrator, XCaloCalibrator]
+  mock_calibration: [CaloCD, XCaloCD]
 }
 
 END_PROLOG
