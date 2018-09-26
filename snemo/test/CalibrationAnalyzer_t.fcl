@@ -1,0 +1,24 @@
+#include "snemo/MockCalibration.fcl"
+
+services: {
+  RandomNumberGenerator: {}
+}
+
+source: {
+  module_type: BrioInputSource
+}
+
+physics: {
+  producers: {
+      @table::snemo.producers
+  }
+
+  path: @local::snemo.mock_calibration
+}
+
+# Above is as per normal calibration run...
+# ... now customize
+services.TFileService: { fileName: "test.root" }
+physics.analyzers.calibrationAnalysis.module_type: "MockCalibrationAnalyzer"
+physics.analysisPath: [ calibrationAnalysis ]
+

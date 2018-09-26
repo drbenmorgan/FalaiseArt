@@ -24,6 +24,7 @@ include(ArtDictionary)
 include(BuildPlugins)
 
 find_package(CLHEP REQUIRED)
+find_package(ROOT REQUIRED)
 
 # - Falaise deps used via ExternalProject. This include is essentially
 #  find_package(Bayeux), and enables relevant imported targets

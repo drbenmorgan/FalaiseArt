@@ -17,5 +17,13 @@ include_directories(${PROJECT_SOURCE_DIR})
 simple_plugin(BrioInputSource "source" Bayeux::Bayeux snemo_datamodel_bridge)
 simple_plugin(SDInputAnalyzer "module" Bayeux::Bayeux CLHEP)
 
+# For an analyzer using TFileService, need to link to the services layer and
+# and any additional ROOT components.
+simple_plugin(MockCalibrationAnalyzer "module"
+  Bayeux::Bayeux
+  art_Framework_Services_Registry
+  art_Framework_Services_Optional
+  art_Framework_Services_Optional_TFileService_service
+  ROOT::Hist)
 
 add_subdirectory(test)
