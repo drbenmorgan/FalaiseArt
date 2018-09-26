@@ -15,9 +15,9 @@
 #include "bayeux/datatools/things.h"
 #include "bayeux/mctools/simulated_data.h"
 
-#include "snemo/datamodel/event_header.h"
-#include "snemo/datamodel/StepHitCollection.h"
 #include "snemo/datamodel/GenBBPrimaryEvent.h"
+#include "snemo/datamodel/StepHitCollection.h"
+#include "snemo/datamodel/event_header.h"
 
 // Forward declare implementation of input source
 namespace snemo {
@@ -25,7 +25,7 @@ namespace snemo {
 }
 
 class snemo::BrioInputSourceDriver {
- public:
+public:
   // Required constructor
   BrioInputSourceDriver(fhicl::ParameterSet const&,
                         art::ProductRegistryHelper&,
@@ -44,25 +44,23 @@ class snemo::BrioInputSourceDriver {
   // Required member function
   void closeCurrentFile();
 
- private:
+private:
   // Return true if the supplied reader has required stores
   bool validateSchema(const brio::reader& r) const;
 
- private:
-  art::SourceHelper const&
-    srcHelper_;             ///< {Run,SubRun,Event}Principal construction helper
-  brio::reader bInput_;     ///< Reader for BRIO files
-  std::string const GI_STORE {"GI"};
-  std::string const ER_STORE {"ER"};
-  std::set<std::string> const stepHitCategories {"gg", "calo", "xcalo", "gveto"};
-  std::string const outputLabel {"SD"}; ///< Matches expectation
+private:
+  art::SourceHelper const& srcHelper_; ///< {Run,SubRun,Event}Principal construction helper
+  brio::reader bInput_;                ///< Reader for BRIO files
+  std::string const GI_STORE{"GI"};
+  std::string const ER_STORE{"ER"};
+  std::set<std::string> const stepHitCategories{"gg", "calo", "xcalo", "gveto"};
+  std::string const outputLabel{"SD"}; ///< Matches expectation
 };
 
 // Implementation of the driver
-snemo::BrioInputSourceDriver::BrioInputSourceDriver(
-  fhicl::ParameterSet const& /*ps*/,
-  art::ProductRegistryHelper& helper,
-  art::SourceHelper const& aSH)
+snemo::BrioInputSourceDriver::BrioInputSourceDriver(fhicl::ParameterSet const& /*ps*/,
+                                                    art::ProductRegistryHelper& helper,
+                                                    art::SourceHelper const& aSH)
   : srcHelper_{aSH}, bInput_{}
 {
   // Products this source will reconstitute into Principals
@@ -76,37 +74,33 @@ snemo::BrioInputSourceDriver::BrioInputSourceDriver(
   helper.reconstitutes<snemo::GenBBPrimaryEvent, art::InEvent>(outputLabel);
   // each expected bank of hits, even if empty
   for (auto hitCat : stepHitCategories) {
-    helper.reconstitutes<snemo::StepHitCollection, art::InEvent>(outputLabel,hitCat);
+    helper.reconstitutes<snemo::StepHitCollection, art::InEvent>(outputLabel, hitCat);
   }
 }
 
-
 void
-snemo::BrioInputSourceDriver::readFile(std::string const& filename,
-                                            art::FileBlock*& fb)
+snemo::BrioInputSourceDriver::readFile(std::string const& filename, art::FileBlock*& fb)
 {
   bInput_.open(filename);
   std::cout << "Opening file " << filename << std::endl;
-  if ( !this->validateSchema(bInput_) ) {
+  if (!this->validateSchema(bInput_)) {
     // Need to throw if we get here
     // "throw cet::CodedException("BrioInput")"?
   };
 
   // Create the file block for the new file
-  fb =
-    new art::FileBlock{art::FileFormatVersion{1, "FLSIMULATE 3.3"}, filename};
+  fb = new art::FileBlock{art::FileFormatVersion{1, "FLSIMULATE 3.3"}, filename};
 }
 
 bool
-snemo::BrioInputSourceDriver::readNext(
-  art::RunPrincipal const* const inR,
-  art::SubRunPrincipal const* const inSR,
-  art::RunPrincipal*& outR,
-  art::SubRunPrincipal*& outSR,
-  art::EventPrincipal*& outE)
+snemo::BrioInputSourceDriver::readNext(art::RunPrincipal const* const inR,
+                                       art::SubRunPrincipal const* const inSR,
+                                       art::RunPrincipal*& outR,
+                                       art::SubRunPrincipal*& outSR,
+                                       art::EventPrincipal*& outE)
 {
   // BRIO is based on while/next iteration...
-  if ( !bInput_.has_next(ER_STORE) ) {
+  if (!bInput_.has_next(ER_STORE)) {
     return false;
   }
 
@@ -114,19 +108,19 @@ snemo::BrioInputSourceDriver::readNext(
   // checking for boundaries, don't expect them in Brio files)
   if (inR == nullptr) {
     outR = srcHelper_.makeRunPrincipal(1, art::Timestamp{});
-    //GI_STORE likely has run level info, maybe even global (where it would be
-    //handled in open/close file and Service attachment
-    //datatools::properties p;
-    //bInput_.load(p, GI_STORE, 0);
-    //p.tree_dump();
-    //art::put_product_in_principal(std::make_unique<datatools::properties>(p), *outE, "BrioInputSource");
+    // GI_STORE likely has run level info, maybe even global (where it would be
+    // handled in open/close file and Service attachment
+    // datatools::properties p;
+    // bInput_.load(p, GI_STORE, 0);
+    // p.tree_dump();
+    // art::put_product_in_principal(std::make_unique<datatools::properties>(p), *outE,
+    // "BrioInputSource");
   }
   // Same for input SubRunPrincipal, need to create, but BRIO files have no
   // concept of subrun so we simply match Run ID
   if (inSR == nullptr) {
     art::SubRunID srID{outR ? outR->run() : inR->run(), 0};
-    outSR = srcHelper_.makeSubRunPrincipal(
-      srID.run(), srID.subRun(), art::Timestamp{});
+    outSR = srcHelper_.makeSubRunPrincipal(srID.run(), srID.subRun(), art::Timestamp{});
   }
 
   // ALWAYS create outE...
@@ -187,7 +181,9 @@ snemo::BrioInputSourceDriver::closeCurrentFile()
   bInput_.close();
 }
 
-bool snemo::BrioInputSourceDriver::validateSchema(const brio::reader& /*r*/) const {
+bool
+snemo::BrioInputSourceDriver::validateSchema(const brio::reader& /*r*/) const
+{
   return true;
 }
 
@@ -197,4 +193,3 @@ namespace snemo {
 }
 
 DEFINE_ART_INPUT_SOURCE(snemo::BrioInputSource)
-
