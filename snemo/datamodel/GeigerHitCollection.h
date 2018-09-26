@@ -10,4 +10,3 @@ namespace snemo {
 } // namespace snemo
 
 #endif // GEIGERHITCOLLECTION_HH
-

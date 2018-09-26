@@ -8,15 +8,13 @@
 #include "bayeux/mctools/base_step_hit.h"
 
 namespace snemo {
-class BaseStepHit : public mctools::base_step_hit {
- public:
-  BaseStepHit() = default;
-  virtual ~BaseStepHit() {};
-  BaseStepHit(const mctools::base_step_hit& p) : mctools::base_step_hit(p){
-  }
-};
-using StepHit = BaseStepHit;
+  class BaseStepHit : public mctools::base_step_hit {
+  public:
+    BaseStepHit() = default;
+    virtual ~BaseStepHit(){};
+    BaseStepHit(const mctools::base_step_hit& p) : mctools::base_step_hit(p) {}
+  };
+  using StepHit = BaseStepHit;
 } // namespace snemo
 
 #endif // STEP_HIT_HH
-

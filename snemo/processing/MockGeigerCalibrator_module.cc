@@ -7,25 +7,24 @@
 #include "art/Framework/Principal/Event.h"
 
 namespace snemo {
-class MockGeigerCalibrator : public art::EDProducer {
- public:
-  MockGeigerCalibrator(fhicl::ParameterSet const& ps);
+  class MockGeigerCalibrator : public art::EDProducer {
+  public:
+    MockGeigerCalibrator(fhicl::ParameterSet const& ps);
 
-  void produce(art::Event& e) override;
-};
+    void produce(art::Event& e) override;
+  };
 
+  MockGeigerCalibrator::MockGeigerCalibrator(fhicl::ParameterSet const&) {}
 
-MockGeigerCalibrator::MockGeigerCalibrator(fhicl::ParameterSet const&) {
-}
+  void
+  MockGeigerCalibrator::produce(art::Event&)
+  {
+    // Consume products here...
 
-void
-MockGeigerCalibrator::produce(art::Event&) {
-  // Consume products here...
+    // Call the processing external function/class here...
 
-  // Call the processing external function/class here...
-
-  // Produce products here...
-}
+    // Produce products here...
+  }
 
 } // namespace snemo
 

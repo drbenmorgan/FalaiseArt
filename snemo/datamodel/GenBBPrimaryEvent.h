@@ -8,14 +8,12 @@
 #include "bayeux/genbb_help/primary_event.h"
 
 namespace snemo {
-class GenBBPrimaryEvent : public genbb::primary_event {
- public:
-  GenBBPrimaryEvent() = default;
-  virtual ~GenBBPrimaryEvent() {};
-  GenBBPrimaryEvent(const genbb::primary_event& p) : genbb::primary_event(p){
-  }
-};
+  class GenBBPrimaryEvent : public genbb::primary_event {
+  public:
+    GenBBPrimaryEvent() = default;
+    virtual ~GenBBPrimaryEvent(){};
+    GenBBPrimaryEvent(const genbb::primary_event& p) : genbb::primary_event(p) {}
+  };
 } // namespace snemo
-
 
 #endif // GENBBPRIMARYEVENT_HH

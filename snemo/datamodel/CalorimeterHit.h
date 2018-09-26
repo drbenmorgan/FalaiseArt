@@ -7,15 +7,18 @@
 
 namespace snemo {
 
-struct CalorimeterHit {
-  double energy;
-  double energyError;
-  double time;
-  double timeError;
-  geomtools::geom_id geoID;
-};
+  struct CalorimeterHit {
+    // Info
+    size_t hitID;
+    geomtools::geom_id geoID;
+
+    // Data
+    double energy;
+    double energyError;
+    double time;
+    double timeError;
+  };
 
 } // namespace snemo
 
 #endif // CALORIMETERHIT_HH
-

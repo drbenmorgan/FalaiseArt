@@ -11,4 +11,3 @@ namespace snemo {
 } // namespace snemo
 
 #endif // CALORIMETERHITCOLLECTION_HH
-

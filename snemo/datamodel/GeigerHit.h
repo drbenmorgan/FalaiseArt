@@ -6,19 +6,18 @@
 #include <cstdint>
 
 namespace snemo {
-struct GeigerHit {
-  uint32_t flags;
-  double radius;
-  double radiusError;
-  double z;
-  double zError;
-  double x;
-  double y;
-  double delayedTime;
-  double delayedTimeError;
-  geomtools::geom_id geoId;
-};
+  struct GeigerHit {
+    uint32_t flags;
+    double radius;
+    double radiusError;
+    double z;
+    double zError;
+    double x;
+    double y;
+    double delayedTime;
+    double delayedTimeError;
+    geomtools::geom_id geoId;
+  };
 } // namespace snemo
 
 #endif // GEIGERHIT_HH
-

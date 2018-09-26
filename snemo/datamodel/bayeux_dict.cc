@@ -27,8 +27,6 @@
 #pragma GCC diagnostic pop
 #endif
 
-
-
 #include "timestamp.ipp"
 DATATOOLS_SERIALIZATION_CLASS_SERIALIZE_INSTANTIATE_ALL(snemo::datamodel::timestamp)
 
@@ -39,4 +37,3 @@ DATATOOLS_SERIALIZATION_CLASS_SERIALIZE_INSTANTIATE_ALL(snemo::datamodel::timest
 #include "event_header.ipp"
 DATATOOLS_SERIALIZATION_CLASS_SERIALIZE_INSTANTIATE_ALL(snemo::datamodel::event_header)
 BOOST_CLASS_EXPORT_IMPLEMENT(snemo::datamodel::event_header)
-
