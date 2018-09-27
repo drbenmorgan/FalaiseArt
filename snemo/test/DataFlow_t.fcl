@@ -1,0 +1,30 @@
+#include "snemo/MockCalibration.fcl"
+
+services: {
+  RandomNumberGenerator: {}
+}
+
+source: {
+  module_type: BrioInputSource
+}
+
+physics: {
+  producers: {
+      @table::snemo.producers
+  }
+
+  path: @local::snemo.mock_calibration
+}
+
+
+physics.outputPath: [ dataFlow, fileDump ]
+
+outputs: {
+  dataFlow: {
+    module_type: DataFlowDumper
+  }
+  fileDump: {
+    module_type: FileDumperOutput
+  }
+}
+
