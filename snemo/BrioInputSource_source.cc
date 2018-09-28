@@ -7,9 +7,6 @@
 #include "art/Framework/IO/Sources/SourceTraits.h"
 #include "art/Framework/IO/Sources/put_product_in_principal.h"
 
-// Can we log?
-#include "messagefacility/MessageLogger/MessageLogger.h"
-
 // Falaise/Bayeux
 #include "bayeux/brio/reader.h"
 #include "bayeux/datatools/things.h"
@@ -107,12 +104,21 @@ snemo::BrioInputSourceDriver::readNext(art::RunPrincipal const* const inR,
   // If input RunPrincipal is null, we need to create one (we are not yet
   // checking for boundaries, don't expect them in Brio files)
   if (inR == nullptr) {
+    std::cout << "New run\n";
     outR = srcHelper_.makeRunPrincipal(1, art::Timestamp{});
     // GI_STORE likely has run level info, maybe even global (where it would be
     // handled in open/close file and Service attachment
-    // datatools::properties p;
-    // bInput_.load(p, GI_STORE, 0);
-    // p.tree_dump();
+    bInput_.rewind_store(GI_STORE);
+    datatools::properties p;
+    size_t entry{0};
+
+    std::cout << "=== GI_STORE === \n";
+    while (bInput_.has_next(GI_STORE)) {
+      bInput_.load(p, GI_STORE, entry);
+      p.tree_dump();
+      ++entry;
+    }
+    std::cout << "=== END_GI_STORE === \n";
     // art::put_product_in_principal(std::make_unique<datatools::properties>(p), *outE,
     // "BrioInputSource");
   }
