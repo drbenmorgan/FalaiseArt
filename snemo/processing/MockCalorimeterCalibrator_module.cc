@@ -47,7 +47,7 @@ namespace {
   struct MCCConfig {
     Atom<std::string> tagLabel{
       Name("tagLabel"),
-      Comment("Label of StepHitCollection product to consume, e.g. SD:calo");
+      Comment("Label of StepHitCollection product to consume, e.g. SD:calo")
     };
 
     Atom<double> lowEnergyThreshold{
