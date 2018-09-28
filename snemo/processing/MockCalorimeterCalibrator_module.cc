@@ -18,15 +18,20 @@ namespace {
   using namespace fhicl;
 
   struct CaloModelConfig {
-    Atom<double> energyResolution{Name("energyResolution"),
-                                  Comment("Calorimeter energy resolution in % for e- at 1MeV")};
+    Atom<double> energyResolution{
+      Name("energyResolution"),
+      Comment("Calorimeter energy resolution in % for e- at 1MeV")
+    };
 
     Sequence<double, 3> alphaQuenchingParameters{
       Name("alphaQuenchingParameters"),
-      Comment("Dimensionless parameters for the Alpha Quenching function")};
+      Comment("Dimensionless parameters for the Alpha Quenching function")
+    };
 
-    Atom<double> relaxationTime{Name("relaxationTime"),
-                                Comment("Scintillator relaxation time in ns")};
+    Atom<double> relaxationTime{
+      Name("relaxationTime"),
+      Comment("Scintillator relaxation time in ns")
+    };
 
     explicit operator snemo::MockCalorimeterModel() const
     {
@@ -42,17 +47,28 @@ namespace {
   struct MCCConfig {
     Atom<std::string> tagLabel{
       Name("tagLabel"),
-      Comment("Label of StepHitCollection product to consume, e.g. SD:calo")};
+      Comment("Label of StepHitCollection product to consume, e.g. SD:calo");
+    };
 
-    Atom<double> lowEnergyThreshold{Name("lowEnergyThreshold"), Comment("Low threshold in keV")};
+    Atom<double> lowEnergyThreshold{
+      Name("lowEnergyThreshold"),
+      Comment("Low threshold in keV")
+    };
 
-    Atom<double> highEnergyThreshold{Name("highEnergyThreshold"), Comment("High threshold in keV")};
+    Atom<double> highEnergyThreshold{
+      Name("highEnergyThreshold"),
+      Comment("High threshold in keV")
+    };
 
-    Atom<double> timeWindow{Name("timeWindow"),
-                            Comment("Time in ns beyond which hits will be discarded")};
+    Atom<double> timeWindow{
+      Name("timeWindow"),
+      Comment("Time in ns beyond which hits will be discarded")
+    };
 
-    Table<CaloModelConfig> caloModel{Name("caloModel"),
-                                     Comment("Parameters for modelling the calorimeter")};
+    Table<CaloModelConfig> caloModel{
+      Name("caloModel"),
+      Comment("Parameters for modelling the calorimeter")
+    };
   };
 } // namespace
 
