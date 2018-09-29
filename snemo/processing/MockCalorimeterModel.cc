@@ -5,7 +5,7 @@
 #include <cmath>
 
 namespace {
-  constexpr double kFWHMINSIGMA{1.0 / (2 * std::sqrt(2 * std::log(2.0)))};
+  const double kFWHMINSIGMA{1.0 / (2 * std::sqrt(2 * std::log(2.0)))};
 } // namespace
 
 namespace snemo {
