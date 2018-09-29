@@ -23,11 +23,23 @@ export FHICL_FILE_PATH="@PROJECT_SOURCE_DIR@/fcl:.:${FHICL_FILE_PATH}"
 # - Update dynamic loader path...
 # Eventually this should be CET_PLUGIN_PATH, but Art as of 2.11.3 doesn't
 # seem to use this fully...
-export LD_LIBRARY_PATH="@PROJECT_BINARY_DIR@/lib:$LD_LIBRARY_PATH"
+#-----------------------------------------------------------------------
+# - BEGIN SHIM
+# Shim around art program to use dynamic loader path without requiring
+# direct setting by the user. This also works around stripping of
+# DYLD_LIBRARY_PATH in SIP enabled environments, at least for art's own
+# dynamic loader path if present to allow usage in a SIP enabled environment,
+__CET_LIBRARY_PATH_NAME="LD_LIBRARY_PATH"
+if [[ $(uname) == 'Darwin' ]]; then
+  __CET_LIBRARY_PATH_NAME="DYLD_LIBRARY_PATH"
+fi
 
+export ${__CET_LIBRARY_PATH_NAME}="@PROJECT_BINARY_DIR@/lib:@PROJECT_BINARY_DIR@/BuildProducts/lib:${!__CET_LIBRARY_PATH_NAME}"
+export ART_PLUGIN_PATH="${!__CET_LIBRARY_PATH_NAME}:$ART_PLUGIN_PATH"
 # - Update ROOT_INCLUDE_PATH for Cling
 export ROOT_INCLUDE_PATH="@PROJECT_BINARY_DIR@/BuildProducts/include:@PROJECT_BINARY_DIR@/BuildProducts/include/bayeux:@PROJECT_SOURCE_DIR@:$ROOT_INCLUDE_PATH"
 
 # - Run art
-which "art" > /dev/null || die "The \`art\` executable is not available in \`\$PATH\`"
-art $@
+artExe=art-brew
+which $artExe > /dev/null || die "The \`art\` executable is not available in \`\$PATH\`"
+$artExe $@
