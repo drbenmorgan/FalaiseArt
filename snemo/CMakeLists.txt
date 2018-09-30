@@ -6,6 +6,9 @@ add_subdirectory(datamodel)
 # Processing i.e Producer modules
 add_subdirectory(processing)
 
+# Services
+add_subdirectory(services)
+
 # We can use Art's supplied "simple_plugin" function
 # This is just a wrapper around add_library, taking care
 # of the naming convention and type of module
