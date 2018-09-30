@@ -1,3 +1,7 @@
+services: {
+  GeometryService: {}
+}
+
 source: {
   module_type: BrioInputSource
   fileNames: ["test.brio", "test.brio"]

@@ -12,8 +12,9 @@ namespace snemo {
 
     // No other accessors yet
 
-    // Function that will be called by framework
-    void postBeginRun(art::Run const&);
+    // Function that will be called by framework, after Run is
+    // created but before modules see it.
+    void preBeginRun(art::Run const&);
   };
 } // namespace snemo
 
