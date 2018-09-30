@@ -9,6 +9,9 @@
 #include "bayeux/datatools/properties.h"
 #include "bayeux/geomtools/geom_id.h"
 
+// Datatools workarounds
+#include "snemo/datamodel/MultiProperties.h"
+
 // MC
 #include "snemo/datamodel/GenBBPrimaryEvent.h"
 #include "snemo/datamodel/StepHit.h"

@@ -20,6 +20,14 @@
   </class>
   <class name="art::Wrapper<datatools::properties>"/>
 
+  <!-- Multi_Properties: low->high -->
+  <class name="datatools::multi_properties::entry" classVersion="10"/>
+  <class name="std::map<std::string, datatools::multi_properties::entry>" classVersion="10"/>
+  <class name="std::list<datatools::multi_properties::entry*>" classVersion="10"/>
+  <class name="datatools::multi_properties" classVersion="10"/>
+  <class name="snemo::MultiProperties" classVersion="10"/>
+  <class name="art::Wrapper<snemo::MultiProperties>"/>
+
   <!-- MCTools types: low->high -->
   <class name="geomtools::geom_id" classVersion="10"/>
   <class name="geomtools::base_hit" classVersion="10"/>

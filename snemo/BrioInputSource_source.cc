@@ -15,6 +15,7 @@
 #include "snemo/datamodel/GenBBPrimaryEvent.h"
 #include "snemo/datamodel/StepHitCollection.h"
 #include "snemo/datamodel/event_header.h"
+#include "snemo/datamodel/MultiProperties.h"
 
 // Forward declare implementation of input source
 namespace snemo {
@@ -62,7 +63,10 @@ snemo::BrioInputSourceDriver::BrioInputSourceDriver(fhicl::ParameterSet const& /
 {
   // Products this source will reconstitute into Principals
   // string is the module label.
-  // At the event level, we add:
+  // At the Run level, we add:
+  // 1. metadata on...
+  // At the Event level, we add:
+  helper.reconstitutes<snemo::MultiProperties, art::InRun>(outputLabel);
   // 1. Primary vertex:
   helper.reconstitutes<geomtools::vector_3d, art::InEvent>(outputLabel);
   // 2. Time (always null in SD)
@@ -107,11 +111,19 @@ snemo::BrioInputSourceDriver::readNext(art::RunPrincipal const* const inR,
     std::cout << "New run\n";
     outR = srcHelper_.makeRunPrincipal(1, art::Timestamp{});
     // GI_STORE likely has run level info, maybe even global (where it would be
-    // handled in open/close file and Service attachment
+    // handled in open/close file and Service attachment)
     bInput_.rewind_store(GI_STORE);
     datatools::properties p;
     size_t entry{0};
 
+    // From Simulation, each element in the GI store
+    // has keys that tell us about it
+    // __dpp.io.metadata.key: the eventual key we need to look up
+    // __dpp.io.metadata.meta: the multiproperties "meta" key
+    // __dpp.io.metadata.rank: seems to just be the store index?
+    // These are used to reconstitute the overall multiproperties object
+    // Should be put in Run, then services can register to be notified
+    // of new Runs (hence new data)
     std::cout << "=== GI_STORE === \n";
     while (bInput_.has_next(GI_STORE)) {
       bInput_.load(p, GI_STORE, entry);
@@ -119,8 +131,8 @@ snemo::BrioInputSourceDriver::readNext(art::RunPrincipal const* const inR,
       ++entry;
     }
     std::cout << "=== END_GI_STORE === \n";
-    // art::put_product_in_principal(std::make_unique<datatools::properties>(p), *outE,
-    // "BrioInputSource");
+
+    art::put_product_in_principal(std::make_unique<snemo::MultiProperties>(), *outR, outputLabel);
   }
   // Same for input SubRunPrincipal, need to create, but BRIO files have no
   // concept of subrun so we simply match Run ID
