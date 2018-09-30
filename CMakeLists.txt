@@ -48,6 +48,7 @@ if(NOT TARGET CLHEP)
 endif()
 
 foreach(_artLib
+    art_Framework_Principal
     art_Framework_Services_Registry
     art_Framework_Services_Optional
     art_Framework_Services_Optional_TFileService_service)
