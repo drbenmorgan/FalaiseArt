@@ -101,6 +101,7 @@ snemo::BrioInputSourceDriver::readNext(art::RunPrincipal const* const inR,
                                        art::EventPrincipal*& outE)
 {
   // BRIO is based on while/next iteration...
+  // However, we seem to lose one event per file currently...
   if (!bInput_.has_next(ER_STORE)) {
     return false;
   }
@@ -112,10 +113,6 @@ snemo::BrioInputSourceDriver::readNext(art::RunPrincipal const* const inR,
     outR = srcHelper_.makeRunPrincipal(1, art::Timestamp{});
     // GI_STORE likely has run level info, maybe even global (where it would be
     // handled in open/close file and Service attachment)
-    bInput_.rewind_store(GI_STORE);
-    datatools::properties p;
-    size_t entry{0};
-
     // From Simulation, each element in the GI store
     // has keys that tell us about it
     // __dpp.io.metadata.key: the eventual key we need to look up
@@ -124,15 +121,22 @@ snemo::BrioInputSourceDriver::readNext(art::RunPrincipal const* const inR,
     // These are used to reconstitute the overall multiproperties object
     // Should be put in Run, then services can register to be notified
     // of new Runs (hence new data)
-    std::cout << "=== GI_STORE === \n";
+    datatools::properties p;
+    size_t entry{0};
+    auto inputMP = std::make_unique<snemo::MultiProperties>();
+
     while (bInput_.has_next(GI_STORE)) {
       bInput_.load(p, GI_STORE, entry);
-      p.tree_dump();
+      std::string key {p.fetch_string("__dpp.io.metadata.key")};
+      std::string meta {p.fetch_string("__dpp.io.metadata.meta")};
+      p.clean("__dpp.io.metadata.key");
+      p.clean("__dpp.io.metadata.meta");
+      p.clean("__dpp.io.metadata.rank");
+      inputMP->add(key, meta, p);
       ++entry;
     }
-    std::cout << "=== END_GI_STORE === \n";
 
-    art::put_product_in_principal(std::make_unique<snemo::MultiProperties>(), *outR, outputLabel);
+    art::put_product_in_principal(std::move(inputMP), *outR, outputLabel);
   }
   // Same for input SubRunPrincipal, need to create, but BRIO files have no
   // concept of subrun so we simply match Run ID
@@ -167,9 +171,6 @@ snemo::BrioInputSourceDriver::readNext(art::RunPrincipal const* const inR,
   auto primary = std::make_unique<snemo::GenBBPrimaryEvent>(SD.get_primary_event());
   art::put_product_in_principal(std::move(primary), *outE, outputLabel);
 
-  //  - Strictly speaking, all of the above are MC products, so
-  //    maybe should reconstitute together? Simulation does of
-  //    course treat them separately...
   // 4. Properties (but always empty)
   // 5. Step hits (generally always collections of "handles":
   //    - In this case, banks may be:
