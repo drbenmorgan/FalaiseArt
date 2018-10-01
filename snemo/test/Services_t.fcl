@@ -1,0 +1,11 @@
+services: {
+  GeometryService: {}
+  VariantService: {}
+  KernelService: {}
+  FooService: {}
+}
+
+source: {
+  module_type: BrioInputSource
+}
+

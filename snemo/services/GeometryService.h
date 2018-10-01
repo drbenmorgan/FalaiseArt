@@ -9,7 +9,7 @@ namespace snemo {
   class GeometryService {
    public:
     GeometryService(fhicl::ParameterSet const&, art::ActivityRegistry&);
-
+    ~GeometryService();
     // No other accessors yet
 
     // Function that will be called by framework, after Run is

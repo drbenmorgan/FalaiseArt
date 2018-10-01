@@ -8,8 +8,14 @@ namespace snemo {
 
 GeometryService::GeometryService(fhicl::ParameterSet const&, art::ActivityRegistry& aRegistry)
 {
+  std::cout << "GeometryService Constructing\n";
   // Register callback...
   aRegistry.sPreBeginRun.watch(this, &GeometryService::preBeginRun);
+}
+
+GeometryService::~GeometryService()
+{
+  std::cout << "GeometryService Destructing\n";
 }
 
 void GeometryService::preBeginRun(art::Run const& run)
