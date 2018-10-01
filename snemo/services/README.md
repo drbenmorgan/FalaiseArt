@@ -57,3 +57,25 @@ exists to ensure the singleton is started. Other services can then depend on thi
 that the singleton is available. However, may be some dependencies on other areas such
 as `libinfo` and so on.
 
+FalaiseArt Services
+===================
+Couple of important things:
+
+1. We can make a service depend on others by holding an art::ServiceHandle to the
+other service, obtaining it in the constructor.
+2. A dependent service must still be declared in the FHiCL `services` table even if we
+don't use it directly. Art does emit a helpful error message of we forget it.
+3. Services are constructed in dependency, then alphanumeric order.
+4. Services are destructed in reverse order to construction.
+5. At least the preBeginRun service callbacks are called for each service in
+   service construction order (not clear for post actions...)
+
+Will need to consider these, as Art introduces the Run->Run transition, which
+we don't have in Falaise.
+
+In some cases, the kernel layer requires actual Bayeux services, so may need to
+hold instances of these in the Art "wrapper" service rather than the object
+the Bayeux service wraps (e.g. geometry manager in geometry service). It should
+still be possible to write suitable interfaces, just with one extra layer of
+indirection.
+
