@@ -1,0 +1,7 @@
+BEGIN_PROLOG
+PartialPrologParams: {
+  foo: 1
+  bar: "hello world"
+  quux: {}
+}
+END_PROLOG

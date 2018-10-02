@@ -1,0 +1,7 @@
+foo: 1
+bar: "hello world"
+# permuting a tuple should fail
+baz: [ 2, 6, "four"]
+quux: {
+  corge: true
+}

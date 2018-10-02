@@ -47,6 +47,11 @@ if(NOT TARGET CLHEP)
   target_link_libraries(CLHEP INTERFACE CLHEP::CLHEP)
 endif()
 
+if(NOT TARGET fhiclcpp)
+  add_library(fhiclcpp INTERFACE)
+  target_link_libraries(fhiclcpp INTERFACE fhiclcpp::fhiclcpp)
+endif()
+
 foreach(_artLib
     art_Framework_Principal
     art_Framework_Services_Registry
@@ -63,7 +68,9 @@ add_executable(testLinkage testLinkage.cc)
 target_link_libraries(testLinkage PRIVATE Bayeux::Bayeux)
 
 add_subdirectory(snemo)
-
 add_subdirectory(programs)
-
 add_subdirectory(fcl)
+
+add_subdirectory(cpp_examples)
+
+

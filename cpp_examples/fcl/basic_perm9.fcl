@@ -1,0 +1,5 @@
+#include "PrologPartTwo.fcl"
+#include "PrologPartOne.fcl"
+
+@table::PrologPartOneParams
+@table::PrologPartTwoParams

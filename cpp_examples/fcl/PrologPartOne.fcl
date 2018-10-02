@@ -1,0 +1,6 @@
+BEGIN_PROLOG
+PrologPartOneParams: {
+  foo: 1
+  baz: [ 2, "four", 6]
+}
+END_PROLOG

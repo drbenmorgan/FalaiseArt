@@ -1,0 +1,8 @@
+foo: 4
+bar: "hello world"
+baz: [ 2, "four", 6]
+quux: {
+  corge: true
+}
+
+foo: 1

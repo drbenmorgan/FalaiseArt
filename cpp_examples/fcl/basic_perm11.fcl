@@ -1,0 +1,5 @@
+#include "PartialProlog.fcl"
+
+@table::PartialPrologParams
+quux.corge: true
+baz: [2, "four", 6]
