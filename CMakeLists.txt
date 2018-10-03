@@ -22,6 +22,9 @@ include(CetCMakeSettings)
 include(CetCompilerSettings)
 include_directories(${PROJECT_SOURCE_DIR})
 
+# Binreloc generator for anything needing selflocation
+include(${PROJECT_SOURCE_DIR}/cmake/GenerateBinreloc.cmake)
+
 #-----------------------------------------------------------------------
 # Dependencies
 # Add everything that the product uses directly (likely not complete yet...)
