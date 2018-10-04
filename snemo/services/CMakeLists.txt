@@ -15,3 +15,10 @@ simple_plugin(FooService "service"
   Bayeux::Bayeux
   snemo_services_KernelService_service
   )
+
+generate_binreloc("ResourceService")
+simple_plugin(ResourceService "service"
+  Bayeux::Bayeux
+  snemo_services_KernelService_service
+  ResourceService_binreloc
+  )
