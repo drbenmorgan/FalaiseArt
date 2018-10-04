@@ -16,8 +16,6 @@ namespace snemo {
    public:
     KernelService(fhicl::ParameterSet const&, art::ActivityRegistry&);
     ~KernelService();
-
-    void preBeginRun(art::Run const&);
   };
 } // namespace snemo
 

@@ -12,19 +12,13 @@ KernelService::KernelService(fhicl::ParameterSet const&, art::ActivityRegistry& 
   std::cout << "KernelService Constructing...\n";
   // Wrap Bayeux initialization because we need resources from various Bayeux's modules:
   bayeux::initialize(0,0,0);
-
-  aRegistry.sPreBeginRun.watch(this, &KernelService::preBeginRun);
+  datatools::kernel::instance().set_logging(datatools::logger::PRIO_TRACE);
 }
 
 KernelService::~KernelService()
 {
   bayeux::terminate();
   std::cout << "KernelService Destructing... \n";
-}
-
-void KernelService::preBeginRun(art::Run const&)
-{
-  std::cout << "KernelService::preBeginRun called...\n";
 }
 
 } // namespace snemo
