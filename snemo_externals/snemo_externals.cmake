@@ -45,6 +45,12 @@ ExternalProject_Add(BAYEUX_EP
 #   we'd called find_package(Bayeux).
 set(Bayeux_LIBRARY ${PROJECT_BINARY_DIR}/BuildProducts/lib/${CMAKE_SHARED_LIBRARY_PREFIX}Bayeux${CMAKE_SHARED_LIBRARY_SUFFIX})
 set(Bayeux_INCLUDE_DIRS ${PROJECT_BINARY_DIR}/BuildProducts/include ${PROJECT_BINARY_DIR}/BuildProducts/include/bayeux)
+foreach(_dir ${Bayeux_INCLUDE_DIRS})
+  if(NOT EXISTS ${_dir})
+    message(STATUS "making directory ${_dir}")
+    file(MAKE_DIRECTORY ${_dir})
+  endif()
+endforeach()
 
 add_library(Bayeux::Bayeux UNKNOWN IMPORTED)
 set_property(TARGET Bayeux::Bayeux PROPERTY IMPORTED_LOCATION ${Bayeux_LIBRARY})

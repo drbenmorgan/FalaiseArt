@@ -1,3 +1,8 @@
+# Only if we need UPS support
+if(NOT FA_UPS_BUILD)
+  return()
+endif()
+
 # Generate the cetpkg_variable_report file
 # - Extract version from PROJECT_VERSION and UPS-ify
 string(REPLACE "." "_" CETPKG_VERSION "${PROJECT_VERSION}")

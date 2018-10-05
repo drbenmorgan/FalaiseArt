@@ -1,3 +1,17 @@
+# 0. Check whether we are using Homebrew or ups
+find_program(FA_HAVE_HOMEBREW brew)
+find_program(FA_HAVE_UPS ups)
+
+# Having both is an erro
+if(FA_HAVE_HOMEBREW AND FA_HAVE_UPS)
+  message(FATAL_ERROR "Detected both homebrew and ups in your path at\n${FA_HAVE_HOMEBREW}\n${FA_HAVE_UPS}\n respectively. FalaiseArt can only be built against one.")
+elseif(FA_HAVE_HOMEBREW)
+  # No shimming required
+  return()
+endif()
+
+set(FA_UPS_BUILD ON)
+
 # 1. Check that we have an Art and Cetbuildtools setup
 #    - These supply all needed dependencies
 if(NOT DEFINED ENV{SETUP_ART})
