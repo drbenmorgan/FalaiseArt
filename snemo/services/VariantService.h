@@ -8,7 +8,8 @@
 #include "art/Framework/Services/Registry/ServiceMacros.h"
 #include "art/Framework/Services/Registry/ServiceHandle.h"
 
-#include "snemo/services/KernelService.h"
+#include "snemo/services/ResourceService.h"
+#include "bayeux/datatools/configuration/variant_service.h"
 
 namespace snemo {
   class VariantService {
@@ -16,9 +17,15 @@ namespace snemo {
     VariantService(fhicl::ParameterSet const&, art::ActivityRegistry&);
     ~VariantService();
 
+    //! Called by Art on each new Run
+    void preBeginRun(art::Run const&);
+
    private:
-    // Depend on KernelService by depending on it
-    art::ServiceHandle<KernelService> kernelSvc_;
+    // Depend on ResourceService by holding an
+    art::ServiceHandle<ResourceService> resourceSvc_;
+
+    // Must manage the underlying Bayeux variant service
+    datatools::configuration::variant_service variantSvc_;
   };
 } // namespace snemo
 
