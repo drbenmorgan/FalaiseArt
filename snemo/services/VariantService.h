@@ -9,7 +9,15 @@
 #include "art/Framework/Services/Registry/ServiceHandle.h"
 
 #include "snemo/services/ResourceService.h"
-#include "bayeux/datatools/configuration/variant_service.h"
+
+#include <memory>
+
+// Forward declare hidden service
+namespace datatools {
+namespace configuration {
+class variant_service;
+}
+}
 
 namespace snemo {
   class VariantService {
@@ -25,7 +33,7 @@ namespace snemo {
     art::ServiceHandle<ResourceService> resourceSvc_;
 
     // Must manage the underlying Bayeux variant service
-    datatools::configuration::variant_service variantSvc_;
+    std::unique_ptr<datatools::configuration::variant_service> variantSvc_;
   };
 } // namespace snemo
 
