@@ -7,7 +7,7 @@
 
 namespace snemo {
 
-KernelService::KernelService(fhicl::ParameterSet const&, art::ActivityRegistry& aRegistry)
+KernelService::KernelService(fhicl::ParameterSet const&, art::ActivityRegistry&)
 {
   std::cout << "KernelService Constructing...\n";
   // Wrap Bayeux initialization because we need resources from various Bayeux's modules:
