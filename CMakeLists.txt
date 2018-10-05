@@ -49,8 +49,8 @@ else()
 endif()
 
 # Alias targets for Homebrew/UPS compatibility
-#add_library(CLHEP INTERFACE)
-#target_link_libraries(CLHEP INTERFACE $<IF:${FA_UPS_BUILD},clhep,CLHEP::CLHEP>)
+add_library(CLHEP INTERFACE)
+target_link_libraries(CLHEP INTERFACE $<IF:$<BOOL:${FA_UPS_BUILD}>,${CLHEP},CLHEP::CLHEP>)
 
 add_library(fhiclcpp INTERFACE)
 target_link_libraries(fhiclcpp INTERFACE $<IF:$<BOOL:${FA_UPS_BUILD}>,${FHICLCPP},fhiclcpp::fhiclcpp>)
