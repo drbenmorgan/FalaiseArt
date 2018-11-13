@@ -40,6 +40,6 @@ export ART_PLUGIN_PATH="${!__CET_LIBRARY_PATH_NAME}:$ART_PLUGIN_PATH"
 export ROOT_INCLUDE_PATH="@PROJECT_BINARY_DIR@/BuildProducts/include:@PROJECT_BINARY_DIR@/BuildProducts/include/bayeux:@PROJECT_SOURCE_DIR@:$ROOT_INCLUDE_PATH"
 
 # - Run art
-artExe=art-brew
+artExe=art
 which $artExe > /dev/null || die "The \`art\` executable is not available in \`\$PATH\`"
 $artExe $@
