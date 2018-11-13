@@ -196,6 +196,7 @@ physics: {
         energyResolution: 12
         alphaQuenchingParameters: [77.4, 0.639, 2.34]
         relaxationTime: 6.0
+      }
     }
   }
   
