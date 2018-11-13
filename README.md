@@ -10,6 +10,8 @@ Installing Art
 
 1. From OpenScienceGrid CVMFS. This assumes an install of CVMFS
    with configuration for the `larsoft.opensciencegrid.org` repo.
+   It is strongly recommended to use the bash shell here.
+   T/Cshell is in principle supported, but issues have been seen on CentOS7 systems
 
    ```
    $ cvmfs_config probe
@@ -112,15 +114,25 @@ $ ninja
 ...
 ```
 
+To keep things simple in the prototype stage, installing FalaiseArt is not yet implemented.
+As in production Falaise, all executables and tasks can be run as-is from the build directory.
+This provides sufficient functionality for testing and prototyping.
+
+
+Using FalaiseArt Plugins
+-------------------------
+
+Due to Art's current reliance on environment variables for configuration, and incompatibility
+
+
+
+
 - Mock fcl scripts for "flsimulate", "flreconstruct"
 - Basic source/producer/analyser modules for known SNemo modules
   - These can just produce dummy/standard data for example
 - Basic brio-reader/translator for current flsimulate output.
 - Use of TFileService for analysis (though maybe have this above)
 - Mock up of data structures
-
-Using FalaiseArt Plugins
--------------------------
 
 Further Information
 ===================
