@@ -140,18 +140,92 @@ Currently availble modules are:
 - `SDInputAnalyzer`: analyzer module to dump products produced by the "SD" module (effectively the `BrioInputSource`). It is a simple demonstration of how to "consume" data products from the Event.
 - `MockCalibrationAnalyzer`: analyzer module that consumes products produced by `MockCalorimeterCalibrator` and uses Art's [`TFileService`](https://cdcvs.fnal.gov/redmine/projects/art/wiki/TFileService) to create and populate a ROOT `TH1F` of the total deposited energy. 
 
-Only `MockCalorimeterCalibrator` provides user configurable parameters.
+Only `MockCalorimeterCalibrator` provides user configurable parameters at present, which can be viewed via `--print-description`:
 
+```
+$ ./flreconstruct --print-description MockCalorimeterCalibrator
+...
+```
 
+The basic sequence of operations that can thus be implemented with the prototype is:
 
+1) Obtain input BRIO file(s) from _production_ version of `flsimulate` in Falaise 
+2) Write an Art script that:
+   - Uses `BrioInputSource` to read the `flsimulate` BRIO file
+   - Adds `Mock{Calorimeter,Geiger}Calibrator` modules in a producer path
+   - Adds `MockCalibrationAnalyzer` in an end path
+   - Configure `TFileService` to write histogram created by the analyzer to file
+ 
+The complete (i.e. _not_ using `#include` to package parameters) FHiCL script to do this is supplied in
+[fcl/snemo_examples/CalibrationAnalysis.fcl](fcl/snemo_examples/CalibrationAnalysis.fcl)
 
+```
+services: {
+  RandomNumberGenerator: {}
+  TFileService: {
+    fileName: "MyCalibrationAnalysis.root"
+  }
+}
 
-- Mock fcl scripts for "flsimulate", "flreconstruct"
-- Basic source/producer/analyser modules for known SNemo modules
-  - These can just produce dummy/standard data for example
-- Basic brio-reader/translator for current flsimulate output.
-- Use of TFileService for analysis (though maybe have this above)
-- Mock up of data structures
+source: {
+  module_type: BrioInputSource
+}
+
+physics: {
+  producers: {
+    caloCD: {
+      module_type: MockCalorimeterCalibrator
+      tagLabel: "SD:calo"
+      lowEnergyThreshold: 50
+      highEnergyThreshold: 150
+      timeWindow: 100
+      caloModel: {
+        energyResolution: 8
+        alphaQuenchingParameters: [77.4, 0.639, 2.34]
+        relaxationTime: 6.0
+      }
+    }
+
+    xcaloCD: {
+      module_type: MockCalorimeterCalibrator
+      tagLabel: "SD:xcalo"
+      lowEnergyThreshold: 50
+      highEnergyThreshold: 150
+      timeWindow: 100
+      caloModel: {
+        energyResolution: 12
+        alphaQuenchingParameters: [77.4, 0.639, 2.34]
+        relaxationTime: 6.0
+    }
+  }
+  
+  analyzers: {
+    calibrationAnalysis: {
+      module_type: "MockCalibrationAnalyzer"
+    }
+  }
+  
+  productionPath: [ caloCD, xcaloCD ]
+  analysisPath: [ calibrationAnalysis ]
+}
+```
+To run it with a file output by the production `flsimulate`, simply do
+
+```
+$ ./flreconstruct -s MyFile.brio -c snemo_examples/CalibrationAnalysis.fcl
+...
+```
+
+It should run and output a `MyCalibrationAnalysis.root` file in the directory in which you
+ran the above command.
+
+- TODOs:
+  - Mock fcl scripts for "flsimulate", "flreconstruct"
+  - Basic source/producer/analyser modules for known SNemo modules
+    - These can just produce dummy/standard data for example
+  - Basic brio-reader/translator for current flsimulate output.
+  - Use of TFileService for analysis (though maybe have this above)
+  - Mock up of data structures
 
 Further Information
 ===================
