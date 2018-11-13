@@ -68,16 +68,16 @@ Input, Output, and Modules in the pipeline are configured via a configuration
 script in the JSON/YAML-like [FHiCL language](https://cdcvs.fnal.gov/redmine/projects/fhicl).
 
 Even without any coding, it's possible to explore the basic functionality and
-behaviour of Art and FHiCL with some simple examples. These are documented with
+behaviour of Art and FHiCL with some simple examples. These are documented by
 a basic walkthrough in the [README_examples.md](README_examples.md) file. Please
-see that document for further information.
+see [that document](README_examples.md) for further information.
 
 
 Building the FalaiseArt Plugins
 --------------------------------
 
-To build and use the FalaiseArt plugins, couple of additional steps are needed.
-The initial setup of art is similar, but one additional package is required:
+To build and use the FalaiseArt plugins, a couple of additional steps are needed.
+The initial setup of art is similar, but two additional packages are required:
 
 ``` console
 $ source <productbasedir>/setups
@@ -86,8 +86,8 @@ $ setup cetbuildtools v7_04_00
 $ setup ninja v1_8_2
 ```
 
-Art is setup as before, the additional `setup` adding the FNAL buildtools for compiling
-UPS based code, and the `ninja` build tools. There is nothing special going on here apart
+Art is setup as before, the additional `setup`s adding the FNAL CMake modules for compiling
+UPS based code, and the `ninja` build tool. There is nothing special going on here apart
 from the oddities of the UPS based install tree and environment setup. Ninja is used to
 speed up the build over the default `make` system, especially when using a CVMFS
 install of Art.
@@ -104,7 +104,7 @@ $ cmake -GNinja ../FalaiseArt.git
 ...
 ```
 
-CMake will run as standard, and should warn you if any setup is missing. Simply type `ninja`
+CMake will run as standard, and should warn you if any required setup is missing. Simply type `ninja`
 to build everything:
 
 ``` console
