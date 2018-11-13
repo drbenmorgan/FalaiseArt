@@ -18,7 +18,7 @@ source: {
 
 physics: {
   producers: {
-    caloCD: {
+    CaloCD: {
       module_type: MockCalorimeterCalibrator
       tagLabel: "SD:calo"
       lowEnergyThreshold: 50
@@ -31,7 +31,7 @@ physics: {
       }
     }
 
-    xcaloCD: {
+    XCaloCD: {
       module_type: MockCalorimeterCalibrator
       tagLabel: "SD:xcalo"
       lowEnergyThreshold: 50
@@ -41,6 +41,7 @@ physics: {
         energyResolution: 12
         alphaQuenchingParameters: [77.4, 0.639, 2.34]
         relaxationTime: 6.0
+      }
     }
   }
 
@@ -50,6 +51,6 @@ physics: {
     }
   }
 
-  productionPath: [ caloCD, xcaloCD ]
+  productionPath: [ CaloCD, XCaloCD ]
   analysisPath: [ calibrationAnalysis ]
 }
