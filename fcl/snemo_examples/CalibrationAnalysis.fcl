@@ -1,0 +1,55 @@
+// Example (full) script for processing and analysing Calibrated Data
+// Everything is specified in one go to illustrate the complete chain.
+// Real production work would partition this into:
+//   1. FHiCL headers to package standard services and parameters
+//   2. Different processing steps, e.g. one to process raw->calibrated,
+//      one to analyze the outputs of that step.
+
+services: {
+  RandomNumberGenerator: {}
+  TFileService: {
+    fileName: "MyCalibrationAnalysis.root"
+  }
+}
+
+source: {
+  module_type: BrioInputSource
+}
+
+physics: {
+  producers: {
+    caloCD: {
+      module_type: MockCalorimeterCalibrator
+      tagLabel: "SD:calo"
+      lowEnergyThreshold: 50
+      highEnergyThreshold: 150
+      timeWindow: 100
+      caloModel: {
+        energyResolution: 8
+        alphaQuenchingParameters: [77.4, 0.639, 2.34]
+        relaxationTime: 6.0
+      }
+    }
+
+    xcaloCD: {
+      module_type: MockCalorimeterCalibrator
+      tagLabel: "SD:xcalo"
+      lowEnergyThreshold: 50
+      highEnergyThreshold: 150
+      timeWindow: 100
+      caloModel: {
+        energyResolution: 12
+        alphaQuenchingParameters: [77.4, 0.639, 2.34]
+        relaxationTime: 6.0
+    }
+  }
+
+  analyzers: {
+    calibrationAnalysis: {
+      module_type: "MockCalibrationAnalyzer"
+    }
+  }
+
+  productionPath: [ caloCD, xcaloCD ]
+  analysisPath: [ calibrationAnalysis ]
+}
