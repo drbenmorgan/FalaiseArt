@@ -12,6 +12,7 @@ Installing Art
    with configuration for the `larsoft.opensciencegrid.org` repo.
 
    ```
+   $ cvmfs_config probe
    $ source /cvmfs/larsoft.opensciencegrid.org/products/setups
    $ setup art v2_11_03 -q e17:debug
    $ art --help
