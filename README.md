@@ -122,7 +122,26 @@ This provides sufficient functionality for testing and prototyping.
 Using FalaiseArt Plugins
 -------------------------
 
-Due to Art's current reliance on environment variables for configuration, and incompatibility
+Due to Art's current reliance on environment variables for configuration, a simple wrapper script
+`flreconstruct` is provided in the build directory of FalaiseArt to assist in running it with appropriate
+settings. It simply forwards on all command line arguments to `art` itself, and so supports all of `art`'s
+arguments, e.g.
+
+```console
+$ ./flreconstruct --help
+```
+
+The wrapper ensures all FalaiseArt plugins are available, and these can be listed using the various `--print-description[-TYPE]`. Art prints plugins in alphanumeric order, so you will see Art builtin modules mixed in with FalaiseArt ones.
+Currently availble modules are:
+
+- `BrioInputSource`: source module to read BRIO files output by production simulation, and populate Run and Event level products in Art.
+- `MockCalorimeterCalibrator`: producer module that transforms raw steps in the calorimeter to calibrated versions
+- `MockGeigerCalibrator`: (_not implemented yet_) producer module that transforms raw steps in the Geiger cels to calibrated versions
+- `SDInputAnalyzer`: analyzer module to dump products produced by the "SD" module (effectively the `BrioInputSource`). It is a simple demonstration of how to "consume" data products from the Event.
+- `MockCalibrationAnalyzer`: analyzer module that consumes products produced by `MockCalorimeterCalibrator` and uses Art's [`TFileService`](https://cdcvs.fnal.gov/redmine/projects/art/wiki/TFileService) to create and populate a ROOT `TH1F` of the total deposited energy. 
+
+Only `MockCalorimeterCalibrator` provides user configurable parameters.
+
 
 
 
