@@ -34,8 +34,15 @@ As FNAL's setup system for Art relies heavily on environment variables,
 it's best to run the above in a "clean" shell with no custom settings for
 things like `PATH`, `LD_LIBRARY_PATH`, and the `CC/CXX/FC` variables.
 If there are any issues in the `setup` step, please raise an [Issue](https://github.com/drbenmorgan/FalaiseArt/issues)
-or drop @drbenmorgan a mail. After setting up `art` check that you
-can run the executable:
+or drop @drbenmorgan a mail.
+
+If you are using the Docker image through Docker or Singularity, simply
+run the image and everything will be setup. _However_, you should use the
+`art-brew` executable instead of plain `art` in the container as this provides
+the needed environment wrapping to run outside CVMFS/UPS. All examples below
+can still be run, just put `art-brew` in place of `art`.
+
+After setting up `art` check that you can run the executable:
 
 ```console
 $ art --version

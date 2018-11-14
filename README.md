@@ -58,6 +58,28 @@ Installing Art
    $ art --help
    ```
 
+3. _Experimental_ Docker or Singularity Images. A basic docker image bundling an install
+   of Art and development tools is available from [Docker Hub](https://hub.docker.com/r/benmorgan/falaise-art/)
+
+   The image may be run through Docker or Singularity, e.g.
+
+   ```console
+   $ docker run --rm -it benmorgan/falaise-art
+   ...
+   falaise-art> art-brew --help
+   ```
+
+   or
+
+   ```console
+   $ singularity shell docker://benmorgan/falaise-art:latest
+   ...
+   $ art-brew --help
+   ```
+
+   Note that the `art` executable here is named `art-brew` to provide the
+   neccessary environment wrapping to run outside of FNAL's UPS system.
+
 Getting Started
 ===============
 Basic Art Usage
@@ -78,8 +100,11 @@ see [that document](README_examples.md) for further information.
 Building the FalaiseArt Plugins
 --------------------------------
 
-To build and use the FalaiseArt plugins, a couple of additional steps are needed.
-The initial setup of art is similar, but two additional packages are required:
+To build and use the FalaiseArt plugins, a couple of additional steps are needed,
+depending on whether you are running using CVMFS/UPS Bundles or Docker/Singularity
+Containers.
+
+For UPS, the initial setup of art is similar, but two additional packages are required:
 
 ``` console
 $ source <productbasedir>/setups
@@ -93,6 +118,19 @@ UPS based code, and the `ninja` build tool. There is nothing special going on he
 from the oddities of the UPS based install tree and environment setup. Ninja is used to
 speed up the build over the default `make` system, especially when using a CVMFS
 install of Art.
+
+With Docker images, no setup is required as the Container will drop you into the
+needed environment, ready to go. When running the Docker image with Singularity
+you will need to do:
+
+``` console
+$ singularity shell docker://benmorgan/falaise-art:latest
+...
+$ brew sh --cc=gcc-7 --env=std
+...
+```
+
+This will drop you into the same environment as the Docker Container provides.
 
 Just like Falaise, you should create a build directory for development and then run `cmake`,
 pointing it to the source directory, e.g.
@@ -138,7 +176,7 @@ Currently availble modules are:
 - `MockCalorimeterCalibrator`: producer module that transforms raw steps in the calorimeter to calibrated versions
 - `MockGeigerCalibrator`: (_not implemented yet_) producer module that transforms raw steps in the Geiger cels to calibrated versions
 - `SDInputAnalyzer`: analyzer module to dump products produced by the "SD" module (effectively the `BrioInputSource`). It is a simple demonstration of how to "consume" data products from the Event.
-- `MockCalibrationAnalyzer`: analyzer module that consumes products produced by `MockCalorimeterCalibrator` and uses Art's [`TFileService`](https://cdcvs.fnal.gov/redmine/projects/art/wiki/TFileService) to create and populate a ROOT `TH1F` of the total deposited energy. 
+- `MockCalibrationAnalyzer`: analyzer module that consumes products produced by `MockCalorimeterCalibrator` and uses Art's [`TFileService`](https://cdcvs.fnal.gov/redmine/projects/art/wiki/TFileService) to create and populate a ROOT `TH1F` of the total deposited energy.
 
 Only `MockCalorimeterCalibrator` provides user configurable parameters at present, which can be viewed via `--print-description`:
 
@@ -149,13 +187,13 @@ $ ./flreconstruct --print-description MockCalorimeterCalibrator
 
 The basic sequence of operations that can thus be implemented with the prototype is:
 
-1) Obtain input BRIO file(s) from _production_ version of `flsimulate` in Falaise 
+1) Obtain input BRIO file(s) from _production_ version of `flsimulate` in Falaise
 2) Write an Art script that:
    - Uses `BrioInputSource` to read the `flsimulate` BRIO file
    - Adds `Mock{Calorimeter,Geiger}Calibrator` modules in a producer path
    - Adds `MockCalibrationAnalyzer` in an end path
    - Configure `TFileService` to write histogram created by the analyzer to file
- 
+
 The complete (i.e. _not_ using `#include` to package parameters) FHiCL script to do this is supplied in
 [fcl/snemo_examples/CalibrationAnalysis.fcl](fcl/snemo_examples/CalibrationAnalysis.fcl)
 
@@ -199,13 +237,13 @@ physics: {
       }
     }
   }
-  
+
   analyzers: {
     calibrationAnalysis: {
       module_type: "MockCalibrationAnalyzer"
     }
   }
-  
+
   productionPath: [ caloCD, xcaloCD ]
   analysisPath: [ calibrationAnalysis ]
 }
