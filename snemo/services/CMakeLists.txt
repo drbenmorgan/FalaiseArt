@@ -9,6 +9,8 @@ simple_plugin(KernelService "service"
 simple_plugin(VariantService "service"
   Bayeux::Bayeux
   snemo_services_KernelService_service
+  snemo_datamodel_bridge
+  art_Framework_Principal
   )
 
 simple_plugin(FooService "service"
