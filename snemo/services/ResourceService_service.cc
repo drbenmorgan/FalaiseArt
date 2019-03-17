@@ -44,9 +44,9 @@ namespace  {
 
 namespace snemo {
 struct ResourceService::URNServices {
-  const std::string dbSvcConfig_ {"@falaise:urn/db/snemo_setup_db.conf"};
+  const std::string dbSvcConfig_ {"@falaise:urn_db.conf"};
   datatools::urn_db_service dbSvc_;
-  const std::string resolverSvcConfig_ {"@falaise:urn/resolvers/snemo_resource_path_resolver.conf"};
+  const std::string resolverSvcConfig_ {"@falaise:urn_resolver.conf"};
   datatools::urn_to_path_resolver_service resolverSvc_;
 
   void start()
