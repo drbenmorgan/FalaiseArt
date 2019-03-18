@@ -5,6 +5,8 @@
 #include "art/Framework/Services/Registry/ActivityRegistry.h"
 #include "art/Framework/Services/Registry/ServiceMacros.h"
 
+#include "snemo/services/VariantService.h"
+
 #include <memory>
 
 // Ideally want to totally hide this, but Pimple pattern
@@ -29,6 +31,9 @@ namespace snemo {
     // interfaces to things we need, not pointer to help impl...
 
    private:
+    // Need VariantService, because the underlying geometry_manager
+    // will rely on it...
+    art::ServiceHandle<VariantService> variantSvc_;
     std::unique_ptr<geomtools::manager> pImpl_;
   };
 } // namespace snemo

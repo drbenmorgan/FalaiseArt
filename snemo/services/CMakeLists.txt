@@ -1,5 +1,6 @@
 simple_plugin(GeometryService "service"
   Bayeux::Bayeux
+  snemo_services_VariantService_service
   art_Framework_Principal
   )
 simple_plugin(KernelService "service"

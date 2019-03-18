@@ -27,6 +27,7 @@ void VariantService::preBeginRun(art::Run const& newRun)
   // Need to consume metadata from Run (this uses a hard coded InputTag
   // for testing
   auto runMetaData = newRun.getValidHandle<MultiProperties>(art::InputTag{"SD"});
+  runMetaData->tree_dump(std::cout);
 
   // In falaise the above is extarct from the input file via
   //

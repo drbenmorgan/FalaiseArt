@@ -9,6 +9,7 @@
 namespace snemo {
 
 GeometryService::GeometryService(fhicl::ParameterSet const&, art::ActivityRegistry& aRegistry) :
+    variantSvc_{art::ServiceHandle<VariantService>()},
     pImpl_ {std::make_unique<geomtools::manager>()}
 {
   std::cout << "GeometryService Constructing\n";
